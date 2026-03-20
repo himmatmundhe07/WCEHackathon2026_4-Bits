@@ -1,0 +1,158 @@
+{
+  "sidebar": {
+    "overview": "अवलोकन",
+    "medicalRecords": "मेडिकल रिकॉर्ड",
+    "labReports": "लैब रिपोर्ट",
+    "appointments": "अपॉइंटमेंट",
+    "findDoctors": "डॉक्टर खोजें",
+    "findPharmacy": "फार्मेसी खोजें",
+    "emergencyProfile": "आपातकालीन प्रोफ़ाइल",
+    "settings": "सेटिंग्स"
+  },
+  "topbar": {
+    "myHealth": "मेरा स्वास्थ्य",
+    "dashboard": "डैशबोर्ड"
+  },
+  "welcome": {
+    "greeting": "सुप्रभात",
+    "greetingAfternoon": "नमस्कार",
+    "greetingEvening": "शुभ संध्या",
+    "profileStatus": "आपकी स्वास्थ्य प्रोफ़ाइल {{completeness}}% पूर्ण है।",
+    "completeProfile": "अपनी प्रोफ़ाइल पूरी करें →"
+  },
+  "emergency": {
+    "title": "आपातकालीन प्रोफ़ाइल",
+    "showQR": "इमरजेंसी QR दिखाएँ",
+    "myQR": "मेरा इमरजेंसी QR",
+    "tapToView": "देखने और डाउनलोड करने के लिए टैप करें"
+  },
+  "cards": {
+    "activeMedications": "सक्रिय दवाइयाँ",
+    "conditions": "स्वास्थ्य स्थिति",
+    "allergies": "एलर्जी",
+    "insurance": "बीमा",
+    "noneAdded": "कोई नहीं जोड़ा गया",
+    "noneRecorded": "कोई रिकॉर्ड नहीं",
+    "notEnrolled": "नामांकित नहीं",
+    "active": "सक्रिय",
+    "viewAll": "सभी देखें →"
+  },
+  "appointments": {
+    "upcoming": "आगामी अपॉइंटमेंट",
+    "book": "अपॉइंटमेंट बुक करें +",
+    "noUpcoming": "कोई आगामी अपॉइंटमेंट नहीं।",
+    "bookFirst": "अपनी पहली अपॉइंटमेंट बुक करें →"
+  },
+  "reports": {
+    "recent": "हालिया रिपोर्ट",
+    "upload": "रिपोर्ट अपलोड करें +",
+    "noReports": "अभी तक कोई रिपोर्ट अपलोड नहीं।",
+    "uploadFirst": "अपनी पहली रिपोर्ट अपलोड करें →",
+    "abnormal": "असामान्य"
+  },
+  "vitals": {
+    "tracker": "वाइटल ट्रैकर",
+    "logReading": "रीडिंग दर्ज करें",
+    "noVitals": "अभी तक कोई वाइटल रिकॉर्ड नहीं।",
+    "logFirst": "अपनी पहली रीडिंग दर्ज करें →",
+    "bpLast7": "रक्तचाप (अंतिम 7)",
+    "sugarLast7": "रक्त शर्करा (अंतिम 7)",
+    "logTitle": "वाइटल रीडिंग दर्ज करें",
+    "bloodPressure": "🩸 रक्तचाप",
+    "bloodSugar": "🍬 रक्त शर्करा",
+    "systolic": "सिस्टोलिक (mmHg)",
+    "diastolic": "डायस्टोलिक (mmHg)",
+    "sugarMgdl": "रक्त शर्करा (mg/dL)",
+    "notes": "नोट्स (वैकल्पिक)",
+    "saveReading": "रीडिंग सेव करें",
+    "saving": "सेव हो रहा है...",
+    "cancel": "रद्द करें"
+  },
+  "prescriptions": {
+    "myPrescriptions": "मेरे प्रिस्क्रिप्शन",
+    "viewAll": "सभी देखें →",
+    "noActive": "कोई सक्रिय प्रिस्क्रिप्शन नहीं।",
+    "prescribedBy": "डॉ. द्वारा निर्धारित",
+    "diagnosis": "निदान:",
+    "viewFull": "पूरा देखें",
+    "giveFeedback": "फीडबैक दें",
+    "fillFeedback": "फीडबैक फॉर्म भरें",
+    "validUntil": "तक वैध",
+    "todayMedicines": "आज की दवाइयाँ",
+    "noMedicines": "आज के लिए कोई दवाई निर्धारित नहीं।",
+    "doctorWantsToKnow": "जानना चाहते हैं कि आप कैसा महसूस कर रहे हैं",
+    "shareFeedback": "कृपया 2 मिनट लेकर बताएं कि आप कैसा महसूस कर रहे हैं।"
+  },
+  "auth": {
+    "welcome": "स्वागत है",
+    "abhaLinked": "ABHA जुड़ा ✓",
+    "linkAbha": "ABHA जोड़ें →",
+    "logout": "लॉगआउट"
+  },
+  "buttons": {
+    "downloadProfile": "पूरी प्रोफ़ाइल डाउनलोड करें",
+    "generatingPdf": "PDF बन रहा है..."
+  },
+  "language": "भाषा",
+
+  "navbar": {
+    "forPatients": "मरीज़ों के लिए",
+    "forHospitals": "अस्पतालों के लिए",
+    "adminLogin": "एडमिन लॉगिन"
+  },
+  "landing": {
+    "tagline": "भारत का आपातकालीन स्वास्थ्य तंत्र",
+    "heroTitle1": "आपका स्वास्थ्य,",
+    "heroTitle2": "हमेशा आपकी पहुँच में।",
+    "poweredBy": "संजीवनी द्वारा संचालित",
+    "heroDesc": "संजीवनी मरीज़ों, अस्पतालों और आपातकालीन बचावकर्ताओं को जोड़ती है — ताकि सही जानकारी सही हाथों तक सही समय पर पहुँचे।",
+    "imPatient": "मैं मरीज़ हूँ →",
+    "registerHospital": "अस्पताल रजिस्टर करें →",
+    "trusted": "राजस्थान भर में विश्वसनीय",
+    "abdmIntegrated": "ABDM एकीकृत",
+    "abhaCompatible": "ABHA संगत",
+    "patientTitle": "मैं मरीज़ हूँ",
+    "patientDesc": "अपने डिजिटल स्वास्थ्य रिकॉर्ड, इमरजेंसी QR कोड, AI दवाई मार्गदर्शन, और नज़दीकी अस्पतालों से जुड़ें।",
+    "createPatient": "मरीज़ खाता बनाएं",
+    "patientLogin": "मरीज़ लॉगिन",
+    "patientFooter": "मरीज़ों के लिए मुफ़्त · ABHA जुड़ा",
+    "hospitalTitle": "हम एक अस्पताल हैं",
+    "hospitalDesc": "अपना अस्पताल रजिस्टर करें, मरीज़ों के रिकॉर्ड प्रबंधित करें, 108 एंबुलेंस नेटवर्क से जुड़ें।",
+    "registerHospitalBtn": "अस्पताल रजिस्टर करें",
+    "hospitalLogin": "अस्पताल लॉगिन",
+    "hospitalFooter": "लाइसेंस सत्यापन आवश्यक · ABDM एकीकृत",
+    "emergencyNetwork": "⚡ आपातकालीन नेटवर्क",
+    "pharmaTitle": "मैं फार्मा हूँ",
+    "pharmaDesc": "अपनी फार्मेसी रजिस्टर करें, इन्वेंट्री प्रबंधित करें, डिजिटल प्रिस्क्रिप्शन प्रोसेस करें।",
+    "registerPharma": "फार्मेसी रजिस्टर करें",
+    "pharmaLogin": "फार्मा लॉगिन",
+    "pharmaFooter": "वैध लाइसेंस आवश्यक · डिजिटल प्रिस्क्रिप्शन",
+    "adminTitle": "प्लेटफॉर्म एडमिन",
+    "adminDesc": "केवल संजीवनी प्लेटफॉर्म प्रशासक। अस्पताल सत्यापन, रोगी डेटा निरीक्षण, और सिस्टम कॉन्फ़िगरेशन प्रबंधित करें।",
+    "adminFooter": "प्रतिबंधित पहुँच · केवल अधिकृत कर्मचारी",
+    "howItWorks": "संजीवनी कैसे काम करती है",
+    "step1": "रजिस्टर करें और हेल्थ ID पाएं",
+    "step2": "अपना इमरजेंसी QR साथ रखें",
+    "step3": "बचावकर्ताओं को तुरंत पहुँच मिले",
+    "stat1": "ABHA ID एकीकृत",
+    "stat2": "एंबुलेंस नेटवर्क तैयार",
+    "stat3": "आपातकालीन पहुँच",
+    "stat4": "सरकारी अनुपालन",
+    "footerTagline": "भारत का आपातकालीन स्वास्थ्य तंत्र बनाना",
+    "platform": "प्लेटफॉर्म",
+    "company": "कंपनी",
+    "legal": "कानूनी"
+  },
+  "signup": {
+    "stepOf": "चरण {{current}} / {{total}}",
+    "home": "← होम",
+    "skipForNow": "अभी छोड़ें →",
+    "back": "पीछे",
+    "goHome": "होम",
+    "continue": "आगे बढ़ें",
+    "creating": "बना रहा है...",
+    "createProfile": "मेरी स्वास्थ्य प्रोफ़ाइल बनाएं",
+    "alreadyHaveAccount": "पहले से खाता है?",
+    "logIn": "लॉग इन करें"
+  }
+}

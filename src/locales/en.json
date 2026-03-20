@@ -1,0 +1,158 @@
+{
+  "sidebar": {
+    "overview": "Overview",
+    "medicalRecords": "Medical Records",
+    "labReports": "Lab Reports",
+    "appointments": "Appointments",
+    "findDoctors": "Find Doctors",
+    "findPharmacy": "Find Pharmacy",
+    "emergencyProfile": "Emergency Profile",
+    "settings": "Settings"
+  },
+  "topbar": {
+    "myHealth": "My Health",
+    "dashboard": "Dashboard"
+  },
+  "welcome": {
+    "greeting": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "profileStatus": "Your health profile is {{completeness}}% complete.",
+    "completeProfile": "Complete your profile →"
+  },
+  "emergency": {
+    "title": "Emergency Profile",
+    "showQR": "Show Emergency QR",
+    "myQR": "My Emergency QR",
+    "tapToView": "Tap to view & download"
+  },
+  "cards": {
+    "activeMedications": "Active Medications",
+    "conditions": "Conditions",
+    "allergies": "Allergies",
+    "insurance": "Insurance",
+    "noneAdded": "None added",
+    "noneRecorded": "None recorded",
+    "notEnrolled": "Not enrolled",
+    "active": "Active",
+    "viewAll": "View all →"
+  },
+  "appointments": {
+    "upcoming": "Upcoming Appointments",
+    "book": "Book Appointment +",
+    "noUpcoming": "No upcoming appointments.",
+    "bookFirst": "Book your first appointment →"
+  },
+  "reports": {
+    "recent": "Recent Reports",
+    "upload": "Upload Report +",
+    "noReports": "No reports uploaded yet.",
+    "uploadFirst": "Upload your first report →",
+    "abnormal": "Abnormal"
+  },
+  "vitals": {
+    "tracker": "Vitals Tracker",
+    "logReading": "Log Reading",
+    "noVitals": "No vitals recorded yet.",
+    "logFirst": "Log your first reading →",
+    "bpLast7": "Blood Pressure (last 7)",
+    "sugarLast7": "Blood Sugar (last 7)",
+    "logTitle": "Log Vital Reading",
+    "bloodPressure": "🩸 Blood Pressure",
+    "bloodSugar": "🍬 Blood Sugar",
+    "systolic": "Systolic (mmHg)",
+    "diastolic": "Diastolic (mmHg)",
+    "sugarMgdl": "Blood Sugar (mg/dL)",
+    "notes": "Notes (optional)",
+    "saveReading": "Save Reading",
+    "saving": "Saving...",
+    "cancel": "Cancel"
+  },
+  "prescriptions": {
+    "myPrescriptions": "My Prescriptions",
+    "viewAll": "View All →",
+    "noActive": "No active prescriptions.",
+    "prescribedBy": "Prescribed by Dr.",
+    "diagnosis": "Diagnosis:",
+    "viewFull": "View Full",
+    "giveFeedback": "Give Feedback",
+    "fillFeedback": "Fill Feedback Form",
+    "validUntil": "Valid until",
+    "todayMedicines": "Today's Medicines",
+    "noMedicines": "No medicines scheduled for today.",
+    "doctorWantsToKnow": "wants to know how you're doing",
+    "shareFeedback": "Please take 2 minutes to share how you feel."
+  },
+  "auth": {
+    "welcome": "Welcome",
+    "abhaLinked": "ABHA Linked ✓",
+    "linkAbha": "Link ABHA →",
+    "logout": "Logout"
+  },
+  "buttons": {
+    "downloadProfile": "Download Full Profile",
+    "generatingPdf": "Generating PDF..."
+  },
+  "language": "Language",
+
+  "navbar": {
+    "forPatients": "For Patients",
+    "forHospitals": "For Hospitals",
+    "adminLogin": "Admin Login"
+  },
+  "landing": {
+    "tagline": "INDIA'S EMERGENCY HEALTH INFRASTRUCTURE",
+    "heroTitle1": "Your Health,",
+    "heroTitle2": "Always Within Reach.",
+    "poweredBy": "Powered by Sanjeevani",
+    "heroDesc": "Sanjeevani connects patients, hospitals, and emergency responders — so the right information reaches the right hands at the right moment.",
+    "imPatient": "I'm a Patient →",
+    "registerHospital": "Register My Hospital →",
+    "trusted": "Trusted across Rajasthan",
+    "abdmIntegrated": "ABDM Integrated",
+    "abhaCompatible": "ABHA Compatible",
+    "patientTitle": "I'm a Patient",
+    "patientDesc": "Access your digital health records, emergency QR code, AI medication guidance, and connect with hospitals near you.",
+    "createPatient": "Create Patient Account",
+    "patientLogin": "Patient Login",
+    "patientFooter": "Free for patients · ABHA linked",
+    "hospitalTitle": "We're a Hospital",
+    "hospitalDesc": "Register your hospital, manage patient records, connect with the 108 ambulance network, and join India's emergency health grid.",
+    "registerHospitalBtn": "Register Hospital",
+    "hospitalLogin": "Hospital Login",
+    "hospitalFooter": "License verification required · ABDM integrated",
+    "emergencyNetwork": "⚡ Emergency Network",
+    "pharmaTitle": "I'm a Pharma",
+    "pharmaDesc": "Register your pharmacy, manage inventory, process digital prescriptions, and provide medication to patients in the network.",
+    "registerPharma": "Register Pharmacy",
+    "pharmaLogin": "Pharma Login",
+    "pharmaFooter": "Valid license required · Digital prescriptions",
+    "adminTitle": "Platform Admin",
+    "adminDesc": "Sanjeevani platform administrators only. Manage hospital verifications, patient data oversight, and system configuration.",
+    "adminFooter": "Restricted access · Authorised personnel only",
+    "howItWorks": "How Sanjeevani Works",
+    "step1": "Register & Get Your Health ID",
+    "step2": "Carry Your Emergency QR",
+    "step3": "Responders Get Instant Access",
+    "stat1": "ABHA IDs Integrated",
+    "stat2": "Ambulance Network Ready",
+    "stat3": "Emergency Access",
+    "stat4": "Government Compliant",
+    "footerTagline": "Building India's Emergency Health Backbone",
+    "platform": "Platform",
+    "company": "Company",
+    "legal": "Legal"
+  },
+  "signup": {
+    "stepOf": "Step {{current}} of {{total}}",
+    "home": "← Home",
+    "skipForNow": "Skip for now →",
+    "back": "Back",
+    "goHome": "Home",
+    "continue": "Continue",
+    "creating": "Creating...",
+    "createProfile": "Create My Health Profile",
+    "alreadyHaveAccount": "Already have an account?",
+    "logIn": "Log in"
+  }
+}

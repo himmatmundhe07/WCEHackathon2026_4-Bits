@@ -1,0 +1,122 @@
+{
+  "sidebar": {
+    "overview": "ઝાંખી",
+    "medicalRecords": "તબીબી રેકોર્ડ",
+    "labReports": "લેબ રિપોર્ટ",
+    "appointments": "એપોઇન્ટમેન્ટ",
+    "findDoctors": "ડૉક્ટર શોધો",
+    "findPharmacy": "ફાર્મસી શોધો",
+    "emergencyProfile": "કટોકટી પ્રોફાઇલ",
+    "settings": "સેટિંગ્સ"
+  },
+  "topbar": {
+    "myHealth": "મારું સ્વાસ્થ્ય",
+    "dashboard": "ડેશબોર્ડ"
+  },
+  "welcome": {
+    "greeting": "સુપ્રભાત",
+    "greetingAfternoon": "શુભ બપોર",
+    "greetingEvening": "શુભ સાંજ",
+    "profileStatus": "તમારી સ્વાસ્થ્ય પ્રોફાઇલ {{completeness}}% પૂર્ણ છે.",
+    "completeProfile": "તમારી પ્રોફાઇલ પૂર્ણ કરો →"
+  },
+  "emergency": {
+    "title": "કટોકટી પ્રોફાઇલ",
+    "showQR": "ઇમર્જન્સી QR બતાવો",
+    "myQR": "મારો ઇમર્જન્સી QR",
+    "tapToView": "જોવા અને ડાઉનલોડ કરવા ટેપ કરો"
+  },
+  "cards": {
+    "activeMedications": "સક્રિય દવાઓ",
+    "conditions": "આરોગ્ય સ્થિતિ",
+    "allergies": "એલર્જી",
+    "insurance": "વીમો",
+    "noneAdded": "કંઈ ઉમેર્યું નથી",
+    "noneRecorded": "કોઈ રેકોર્ડ નથી",
+    "notEnrolled": "નોંધાયેલ નથી",
+    "active": "સક્રિય",
+    "viewAll": "બધા જુઓ →"
+  },
+  "appointments": {
+    "upcoming": "આગામી એપોઇન્ટમેન્ટ",
+    "book": "એપોઇન્ટમેન્ટ બુક કરો +",
+    "noUpcoming": "કોઈ આગામી એપોઇન્ટમેન્ટ નથી.",
+    "bookFirst": "તમારી પ્રથમ એપોઇન્ટમેન્ટ બુક કરો →"
+  },
+  "reports": {
+    "recent": "તાજેતરના અહેવાલ",
+    "upload": "રિપોર્ટ અપલોડ કરો +",
+    "noReports": "હજુ સુધી કોઈ રિપોર્ટ અપલોડ થયો નથી.",
+    "uploadFirst": "તમારો પ્રથમ રિપોર્ટ અપલોડ કરો →",
+    "abnormal": "અસામાન્ય"
+  },
+  "vitals": {
+    "tracker": "વાઇટલ ટ્રેકર",
+    "logReading": "રીડિંગ લોગ કરો",
+    "noVitals": "હજુ સુધી કોઈ વાઇટલ રેકોર્ડ નથી.",
+    "logFirst": "તમારી પ્રથમ રીડિંગ લોગ કરો →",
+    "bpLast7": "બ્લડ પ્રેશર (છેલ્લા 7)",
+    "sugarLast7": "બ્લડ સુગર (છેલ્લા 7)",
+    "logTitle": "વાઇટલ રીડિંગ લોગ કરો",
+    "bloodPressure": "🩸 બ્લડ પ્રેશર",
+    "bloodSugar": "🍬 બ્લડ સુગર",
+    "systolic": "સિસ્ટોલિક (mmHg)",
+    "diastolic": "ડાયસ્ટોલિક (mmHg)",
+    "sugarMgdl": "બ્લડ સુગર (mg/dL)",
+    "notes": "નોંધ (વૈકલ્પિક)",
+    "saveReading": "રીડિંગ સેવ કરો",
+    "saving": "સેવ થઈ રહ્યું છે...",
+    "cancel": "રદ કરો"
+  },
+  "prescriptions": {
+    "myPrescriptions": "મારા પ્રિસ્ક્રિપ્શન",
+    "viewAll": "બધા જુઓ →",
+    "noActive": "કોઈ સક્રિય પ્રિસ્ક્રિપ્શન નથી.",
+    "prescribedBy": "ડૉ. દ્વારા સૂચવેલ",
+    "diagnosis": "નિદાન:",
+    "viewFull": "પૂર્ણ જુઓ",
+    "giveFeedback": "ફીડબેક આપો",
+    "fillFeedback": "ફીડબેક ફોર્મ ભરો",
+    "validUntil": "સુધી માન્ય",
+    "todayMedicines": "આજની દવાઓ",
+    "noMedicines": "આજ માટે કોઈ દવા સૂચવેલ નથી.",
+    "doctorWantsToKnow": "જાણવા માગે છે કે તમે કેવું અનુભવો છો",
+    "shareFeedback": "કૃપા કરીને 2 મિનિટ લઈને જણાવો કે તમે કેવું અનુભવો છો."
+  },
+  "auth": {
+    "welcome": "સ્વાગત છે",
+    "abhaLinked": "ABHA જોડાયેલ ✓",
+    "linkAbha": "ABHA જોડો →",
+    "logout": "લૉગઆઉટ"
+  },
+  "buttons": {
+    "downloadProfile": "પૂર્ણ પ્રોફાઇલ ડાઉનલોડ કરો",
+    "generatingPdf": "PDF બની રહી છે..."
+  },
+  "language": "ભાષા",
+  "navbar": { "forPatients": "દર્દીઓ માટે", "forHospitals": "હોસ્પિટલો માટે", "adminLogin": "એડમિન લોગિન" },
+  "landing": {
+    "tagline": "ભારતનું ઇમર્જન્સી સ્વાસ્થ્ય તંત્ર", "heroTitle1": "તમારું સ્વાસ્થ્ય,", "heroTitle2": "હંમેશા તમારી પહોંચમાં.",
+    "poweredBy": "સંજીવની દ્વારા સંચાલિત", "heroDesc": "સંજીવની દર્દીઓ, હોસ્પિટલો અને ઇમર્જન્સી રિસ્પોન્ડર્સને જોડે છે.",
+    "imPatient": "હું દર્દી છું →", "registerHospital": "હોસ્પિટલ રજિસ્ટર કરો →",
+    "trusted": "રાજસ્થાનમાં વિશ્વસનીય", "abdmIntegrated": "ABDM એકીકૃત", "abhaCompatible": "ABHA સંગત",
+    "patientTitle": "હું દર્દી છું", "patientDesc": "તમારા ડિજિટલ સ્વાસ્થ્ય રેકોર્ડ, ઇમર્જન્સી QR કોડ અને નજીકની હોસ્પિટલો સાથે જોડાઓ.",
+    "createPatient": "દર્દી ખાતું બનાવો", "patientLogin": "દર્દી લોગિન", "patientFooter": "દર્દીઓ માટે મહેરી · ABHA જોડાયેલ",
+    "hospitalTitle": "અમે હોસ્પિટલ છીએ", "hospitalDesc": "તમારી હોસ્પિટલ રજિસ્ટર કરો, દર્દીઓના રેકોર્ડ મેનેજ કરો, 108 એમ્બ્યુલન્સ નેટવર્ક સાથે જોડાઓ.",
+    "registerHospitalBtn": "હોસ્પિટલ રજિસ્ટર કરો", "hospitalLogin": "હોસ્પિટલ લોગિન",
+    "hospitalFooter": "લાઇસન્સ સત્યાપન આવશ્યક · ABDM એકીકૃત", "emergencyNetwork": "⚡ ઇમર્જન્સી નેટવર્ક",
+    "pharmaTitle": "હું ફાર્મા છું", "pharmaDesc": "તમારી ફાર્મસી રજિસ્ટર કરો, ઇન્વેન્ટ્રી મેનેજ કરો, ડિજિટલ પ્રિસ્ક્રિપ્શન પ્રોસેસ કરો.",
+    "registerPharma": "ફાર્મસી રજિસ્ટર કરો", "pharmaLogin": "ફાર્મા લોગિન", "pharmaFooter": "વૈધ લાઇસન્સ આવશ્યક · ડિજિટલ પ્રિસ્ક્રિપ્શન",
+    "adminTitle": "પ્લેટફોર્મ એડમિન", "adminDesc": "માત્ર સંજીવની પ્લેટફોર્મ પ્રશાસકો.", "adminFooter": "પ્રતિબંધિત પહોંચ · માત્ર અધિકૃત કર્મચારીઓ",
+    "howItWorks": "સંજીવની કેવી રીતે કામ કરે છે",
+    "step1": "રજિસ્ટર કરો અને હેલ્થ ID મેળવો", "step2": "તમારો ઇમર્જન્સી QR સાથે રાખો", "step3": "રિસ્પોન્ડર્સને તરત પહોંચ મળે",
+    "stat1": "ABHA ID એકીકૃત", "stat2": "એમ્બ્યુલન્સ નેટવર્ક તૈયાર", "stat3": "ઇમર્જન્સી પહોંચ", "stat4": "સરકારી અનુપાલન",
+    "footerTagline": "ભારતનું ઇમર્જન્સી સ્વાસ્થ્ય તંત્ર બનાવવું", "platform": "પ્લેટફોર્મ", "company": "કંપની", "legal": "કાનૂની"
+  },
+  "signup": {
+    "stepOf": "પગલું {{current}} / {{total}}", "home": "← હોમ", "skipForNow": "હમણાં છોડો →",
+    "back": "પાછળ", "goHome": "હોમ", "continue": "આગળ વધો",
+    "creating": "બનાવી રહ્યું છે...", "createProfile": "મારી સ્વાસ્થ્ય પ્રોફાઇલ બનાવો",
+    "alreadyHaveAccount": "પહેલેથી ખાતું છે?", "logIn": "લોગ ઇન કરો"
+  }
+}

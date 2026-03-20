@@ -1,0 +1,7 @@
+project_id = "swdaakyhrlwrosdbmfeb"
+
+[functions.create-auth-user]
+verify_jwt = false
+
+[functions.generate-fitness-plan]
+verify_jwt = false

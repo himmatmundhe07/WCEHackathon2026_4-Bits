@@ -1,0 +1,122 @@
+{
+  "sidebar": {
+    "overview": "आढावा",
+    "medicalRecords": "वैद्यकीय नोंदी",
+    "labReports": "लॅब अहवाल",
+    "appointments": "भेटी",
+    "findDoctors": "डॉक्टर शोधा",
+    "findPharmacy": "फार्मसी शोधा",
+    "emergencyProfile": "आणीबाणी प्रोफाइल",
+    "settings": "सेटिंग्ज"
+  },
+  "topbar": {
+    "myHealth": "माझे आरोग्य",
+    "dashboard": "डॅशबोर्ड"
+  },
+  "welcome": {
+    "greeting": "सुप्रभात",
+    "greetingAfternoon": "शुभ दुपार",
+    "greetingEvening": "शुभ संध्याकाळ",
+    "profileStatus": "तुमचे आरोग्य प्रोफाइल {{completeness}}% पूर्ण आहे.",
+    "completeProfile": "तुमचे प्रोफाइल पूर्ण करा →"
+  },
+  "emergency": {
+    "title": "आणीबाणी प्रोफाइल",
+    "showQR": "आणीबाणी QR दाखवा",
+    "myQR": "माझा आणीबाणी QR",
+    "tapToView": "पाहण्यासाठी आणि डाउनलोड करण्यासाठी टॅप करा"
+  },
+  "cards": {
+    "activeMedications": "सक्रिय औषधे",
+    "conditions": "आरोग्य स्थिती",
+    "allergies": "ऍलर्जी",
+    "insurance": "विमा",
+    "noneAdded": "काही जोडलेले नाही",
+    "noneRecorded": "नोंद नाही",
+    "notEnrolled": "नोंदणी नाही",
+    "active": "सक्रिय",
+    "viewAll": "सर्व पहा →"
+  },
+  "appointments": {
+    "upcoming": "आगामी भेटी",
+    "book": "भेट बुक करा +",
+    "noUpcoming": "कोणतीही आगामी भेट नाही.",
+    "bookFirst": "तुमची पहिली भेट बुक करा →"
+  },
+  "reports": {
+    "recent": "अलीकडील अहवाल",
+    "upload": "अहवाल अपलोड करा +",
+    "noReports": "अद्याप अहवाल अपलोड केलेला नाही.",
+    "uploadFirst": "तुमचा पहिला अहवाल अपलोड करा →",
+    "abnormal": "असामान्य"
+  },
+  "vitals": {
+    "tracker": "व्हायटल ट्रॅकर",
+    "logReading": "रीडिंग नोंदवा",
+    "noVitals": "अद्याप व्हायटल नोंदवलेले नाहीत.",
+    "logFirst": "तुमची पहिली रीडिंग नोंदवा →",
+    "bpLast7": "रक्तदाब (शेवटचे 7)",
+    "sugarLast7": "रक्तशर्करा (शेवटचे 7)",
+    "logTitle": "व्हायटल रीडिंग नोंदवा",
+    "bloodPressure": "🩸 रक्तदाब",
+    "bloodSugar": "🍬 रक्तशर्करा",
+    "systolic": "सिस्टोलिक (mmHg)",
+    "diastolic": "डायस्टोलिक (mmHg)",
+    "sugarMgdl": "रक्तशर्करा (mg/dL)",
+    "notes": "नोट्स (ऐच्छिक)",
+    "saveReading": "रीडिंग जतन करा",
+    "saving": "जतन होत आहे...",
+    "cancel": "रद्द करा"
+  },
+  "prescriptions": {
+    "myPrescriptions": "माझे प्रिस्क्रिप्शन",
+    "viewAll": "सर्व पहा →",
+    "noActive": "सक्रिय प्रिस्क्रिप्शन नाहीत.",
+    "prescribedBy": "डॉ. यांनी लिहिलेले",
+    "diagnosis": "निदान:",
+    "viewFull": "पूर्ण पहा",
+    "giveFeedback": "अभिप्राय द्या",
+    "fillFeedback": "अभिप्राय फॉर्म भरा",
+    "validUntil": "पर्यंत वैध",
+    "todayMedicines": "आजची औषधे",
+    "noMedicines": "आजसाठी कोणतेही औषध नाही.",
+    "doctorWantsToKnow": "तुम्हाला कसे वाटते ते जाणून घ्यायचे आहे",
+    "shareFeedback": "कृपया 2 मिनिटे द्या आणि तुम्हाला कसे वाटते ते सांगा."
+  },
+  "auth": {
+    "welcome": "स्वागत आहे",
+    "abhaLinked": "ABHA जोडलेले ✓",
+    "linkAbha": "ABHA जोडा →",
+    "logout": "लॉगआउट"
+  },
+  "buttons": {
+    "downloadProfile": "पूर्ण प्रोफाइल डाउनलोड करा",
+    "generatingPdf": "PDF तयार होत आहे..."
+  },
+  "language": "भाषा",
+  "navbar": { "forPatients": "रुग्णांसाठी", "forHospitals": "हॉस्पिटलसाठी", "adminLogin": "अॅडमिन लॉगिन" },
+  "landing": {
+    "tagline": "भारताचे आणीबाणी आरोग्य तंत्र", "heroTitle1": "तुमचे आरोग्य,", "heroTitle2": "नेहमी तुमच्या पोहोचात.",
+    "poweredBy": "संजीवनी द्वारे संचालित", "heroDesc": "संजीवनी रुग्ण, हॉस्पिटल आणि आणीबाणी बचावकर्त्यांना जोडते.",
+    "imPatient": "मी रुग्ण आहे →", "registerHospital": "हॉस्पिटल नोंदणी करा →",
+    "trusted": "राजस्थानभर विश्वसनीय", "abdmIntegrated": "ABDM एकीकृत", "abhaCompatible": "ABHA संगत",
+    "patientTitle": "मी रुग्ण आहे", "patientDesc": "तुमचे डिजिटल आरोग्य नोंदी, आणीबाणी QR कोड आणि जवळच्या हॉस्पिटलशी जोडले जा.",
+    "createPatient": "रुग्ण खाते तयार करा", "patientLogin": "रुग्ण लॉगिन", "patientFooter": "रुग्णांसाठी मोफत · ABHA जोडलेले",
+    "hospitalTitle": "आम्ही हॉस्पिटल आहोत", "hospitalDesc": "तुमचे हॉस्पिटल नोंदणी करा, रुग्णांच्या नोंदी व्यवस्थापित करा, 108 अॅम्ब्युलन्स नेटवर्कशी जोडले जा.",
+    "registerHospitalBtn": "हॉस्पिटल नोंदणी करा", "hospitalLogin": "हॉस्पिटल लॉगिन",
+    "hospitalFooter": "परवाना सत्यापन आवश्यक · ABDM एकीकृत", "emergencyNetwork": "⚡ आणीबाणी नेटवर्क",
+    "pharmaTitle": "मी फार्मा आहे", "pharmaDesc": "तुमची फार्मसी नोंदणी करा, इन्व्हेंट्री व्यवस्थापित करा, डिजिटल प्रिस्क्रिप्शन प्रोसेस करा.",
+    "registerPharma": "फार्मसी नोंदणी करा", "pharmaLogin": "फार्मा लॉगिन", "pharmaFooter": "वैध परवाना आवश्यक · डिजिटल प्रिस्क्रिप्शन",
+    "adminTitle": "प्लॅटफॉर्म अॅडमिन", "adminDesc": "फक्त संजीवनी प्लॅटफॉर्म प्रशासक.", "adminFooter": "प्रतिबंधित प्रवेश · फक्त अधिकृत कर्मचारी",
+    "howItWorks": "संजीवनी कशी काम करते",
+    "step1": "नोंदणी करा आणि हेल्थ ID मिळवा", "step2": "तुमचा आणीबाणी QR सोबत ठेवा", "step3": "बचावकर्त्यांना ताबडतोब प्रवेश मिळतो",
+    "stat1": "ABHA ID एकीकृत", "stat2": "अॅम्ब्युलन्स नेटवर्क तयार", "stat3": "आणीबाणी प्रवेश", "stat4": "सरकारी अनुपालन",
+    "footerTagline": "भारताचे आणीबाणी आरोग्य तंत्र तयार करणे", "platform": "प्लॅटफॉर्म", "company": "कंपनी", "legal": "कानूनी"
+  },
+  "signup": {
+    "stepOf": "पायरी {{current}} / {{total}}", "home": "← होम", "skipForNow": "सध्या सोडा →",
+    "back": "मागे", "goHome": "होम", "continue": "पुढे चला",
+    "creating": "तयार होत आहे...", "createProfile": "माझे आरोग्य प्रोफाइल तयार करा",
+    "alreadyHaveAccount": "आधीच खाते आहे?", "logIn": "लॉग इन करा"
+  }
+}
