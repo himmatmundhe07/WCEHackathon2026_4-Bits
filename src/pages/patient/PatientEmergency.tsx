@@ -1,13 +1,40 @@
 import { usePatientContext } from '@/hooks/usePatientContext';
 import { QRCodeSVG } from 'qrcode.react';
 import JharokhaArch from '@/components/admin/JharokhaArch';
-import { Download, Share2, Printer, Phone, AlertTriangle, Heart } from 'lucide-react';
+import { Download, Share2, Printer, Phone, AlertTriangle, Heart, ShieldCheck, Camera } from 'lucide-react';
 import PatientSOSPanel from '@/components/patient/dashboard/PatientSOSPanel';
 import EmergencyAssistant from '@/components/patient/dashboard/EmergencyAssistant';
+import FaceScanner from '@/components/common/FaceScanner';
+import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const PatientEmergency = () => {
   const { patient } = usePatientContext();
+  const [isFaceScannerOpen, setIsFaceScannerOpen] = useState(false);
+  const [hasFaceId, setHasFaceId] = useState(!!(patient as any).face_descriptor);
   const qrUrl = `${window.location.origin}/qr/${patient.id}`;
+
+  const handleFaceScanSuccess = async (descriptor: Float32Array) => {
+    try {
+       const descriptorJson = JSON.stringify(Array.from(descriptor));
+       const { error } = await (supabase as any).from('patients').update({ face_descriptor: descriptorJson }).eq('id', patient.id);
+       
+       if (error) {
+         toast.error("Failed to save Face ID to database.");
+         setIsFaceScannerOpen(false);
+         return;
+       }
+       
+       toast.success("Biometric Face ID registered successfully!");
+       setHasFaceId(true);
+       setIsFaceScannerOpen(false);
+    } catch(err) {
+       console.error(err);
+       toast.error("An error occurred while saving biometrics.");
+       setIsFaceScannerOpen(false);
+    }
+  };
 
   const handleDownload = () => {
     const svg = document.querySelector('#emergency-qr svg') as SVGElement;
@@ -31,6 +58,35 @@ const PatientEmergency = () => {
 
       {/* Medical AI Triage Assistant */}
       <EmergencyAssistant />
+
+      {/* Biometric Face ID Registration */}
+      <div className="bg-white rounded-xl overflow-hidden shadow-sm" style={{ border: '1px solid #E2EEF1' }}>
+        <JharokhaArch color="#6366f1" opacity={0.15} />
+        <div className="p-6 md:p-8 flex flex-col items-center justify-center text-center">
+           <ShieldCheck size={48} className={`mb-4 ${hasFaceId ? 'text-green-500' : 'text-indigo-500'}`} />
+           <h2 className="text-xl font-black text-slate-800 mb-2 uppercase tracking-wide">
+             {hasFaceId ? 'Biometrics Active' : 'Emergency Face ID'}
+           </h2>
+           <p className="max-w-md text-sm text-slate-500 mb-6 leading-relaxed">
+             {hasFaceId 
+               ? "Your facial biometrics are securely registered. Paramedics can now identify you instantly even if you are unresponsive and cannot provide your QR code." 
+               : "Register your face using our 128-point biometric AI. If you are unresponsive in an accident and your phone is lost, paramedics can scan your face to retrieve your medical profile."}
+           </p>
+
+           {isFaceScannerOpen ? (
+             <FaceScanner mode="register" onCancel={() => setIsFaceScannerOpen(false)} onScanSuccess={handleFaceScanSuccess} />
+           ) : (
+             <button 
+               onClick={() => setIsFaceScannerOpen(true)}
+               className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2 ${
+                 hasFaceId ? 'bg-green-600 hover:bg-green-700 shadow-green-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
+               }`}
+             >
+               <Camera size={18} /> {hasFaceId ? 'Re-scan Face ID' : 'Enroll Face ID'}
+             </button>
+           )}
+        </div>
+      </div>
 
       {/* Premium Digital Medical ID Card */}
       <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl overflow-hidden relative shadow-md border border-[#E2EEF1]">

@@ -37,6 +37,7 @@ export const getMedicalAdviceStream = async (
       3. No fluff, no introductory filler. Direct, life-saving actions only.
       4. Tone: Calm, Authoritative, Urgent, and Easy to Read under stress.
       5. Answer standard questions (like "What is CPR?", "How to treat a burn?") instantly and clearly.
+      6. MULTILINGUAL SUPPORT: You MUST seamlessly answer in whatever language the user speaks (Hindi, Marathi, Gujarati, English, etc). NEVER refuse to speak their language. Translate these medical instructions perfectly into their language.
     `;
 
     // The newer Gemini 2.5 models are versatile and work with both text and multimodal prompts

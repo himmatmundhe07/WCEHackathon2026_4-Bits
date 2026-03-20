@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import JharokhaArch from '@/components/admin/JharokhaArch';
-import { AlertCircle, MapPin, Truck, CheckCircle2, ChevronRight, LocateFixed, Video } from 'lucide-react';
+import { AlertCircle, MapPin, Truck, CheckCircle2, ChevronRight, LocateFixed, Video, UserCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -144,11 +145,20 @@ export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string })
                  )}
                </div>
 
-               {sos.video_url && (
-                 <a href={sos.video_url} target="_blank" rel="noreferrer" className="w-full mb-3 py-2 rounded-lg text-[12px] font-bold text-white flex items-center justify-center gap-2 transition-all hover:bg-slate-700" style={{ background: '#1E293B' }}>
-                    <Video size={14} /> View Accident Evidence
-                 </a>
-               )}
+                {sos.video_url ? (
+                  <div className="flex gap-2 mb-3">
+                    <a href={sos.video_url} target="_blank" rel="noreferrer" className="flex-1 py-2 rounded-lg text-[11px] font-bold text-white flex items-center justify-center gap-1 transition-all hover:bg-slate-700" style={{ background: '#1E293B' }}>
+                       <Video size={14} /> Evidence
+                    </a>
+                    <Link to={`/qr/${sos.patient_id}`} target="_blank" className="flex-1 py-2 rounded-lg text-[11px] font-bold text-slate-700 flex items-center justify-center gap-1 transition-all hover:bg-slate-200 border border-slate-300 bg-white">
+                       <UserCircle2 size={14} /> Full Profile
+                    </Link>
+                  </div>
+                ) : (
+                  <Link to={`/qr/${sos.patient_id}`} target="_blank" className="w-full mb-3 py-2 rounded-lg text-[12px] font-bold text-slate-700 flex items-center justify-center gap-2 transition-all hover:bg-slate-200 border border-slate-300 bg-white">
+                     <UserCircle2 size={16} /> View Full Medical Profile
+                  </Link>
+                )}
 
                <div className="mt-auto">
                  {sos.status === 'pending' ? (

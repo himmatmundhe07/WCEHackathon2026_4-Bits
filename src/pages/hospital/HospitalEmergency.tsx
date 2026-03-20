@@ -76,29 +76,44 @@ const HospitalEmergency = () => {
     fetchAlerts();
   };
 
-  const handleScan = async (decodedUrl: string) => {
-    // Validate if it's our QR code format
-    try {
-       const url = new URL(decodedUrl);
-       if (url.pathname.startsWith('/qr/')) {
-          const patientId = url.pathname.replace('/qr/', '');
-          
-          // Log it on behalf of the hospital
-          await supabase.from('qr_scan_logs').insert({
-             patient_id: patientId,
-             hospital_id: hospital?.id,
-             scan_location: 'Hospital Scanner',
-             scanned_by: hospital?.admin_name || 'Hospital Admin',
-          });
-          
-          toast.success("Patient scanned successfully! Loading emergency data...");
-          // Open the public profile page in a new window/tab for the doctor to see the huge red banners
-          window.open(decodedUrl, '_blank');
-       } else {
-          toast.error("Invalid QR Code format.");
+  const handleScan = async (decodedText: string) => {
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decodedText);
+    
+    let patientId = '';
+    let finalUrl = '';
+
+    if (isUUID) {
+       patientId = decodedText;
+       finalUrl = `${window.location.origin}/qr/${patientId}`;
+    } else {
+       try {
+         const url = new URL(decodedText);
+         if (url.pathname.startsWith('/qr/')) {
+            patientId = url.pathname.replace('/qr/', '');
+            finalUrl = decodedText;
+         } else {
+            toast.error("Invalid QR Code format.");
+            return;
+         }
+       } catch {
+          toast.error("Unrecognized QR Code. Please scan a valid Sanjeevani tag.");
+          return;
        }
-    } catch {
-       toast.error("Unrecognized QR Code. Please scan a valid Sanjeevani tag.");
+    }
+    
+    try {
+      // Log it on behalf of the hospital
+      await supabase.from('qr_scan_logs').insert({
+         patient_id: patientId,
+         hospital_id: hospital?.id,
+         scan_location: isUUID ? 'Biometric Face Scan' : 'QR Scanner',
+         scanned_by: hospital?.admin_name || 'Hospital Admin',
+      });
+      
+      toast.success("Patient matched successfully! Loading emergency data...");
+      window.open(finalUrl, '_blank');
+    } catch (e) {
+      toast.error("Failed to log scan.");
     }
   };
 
@@ -112,7 +127,7 @@ const HospitalEmergency = () => {
            style={{ background: '#DC2626' }}
          >
            <Camera size={18} />
-           Scan Patient QR
+           Smart Scan (QR/Face)
          </button>
       </div>
 
