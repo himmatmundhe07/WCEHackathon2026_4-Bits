@@ -290,11 +290,12 @@ const NewPrescriptionModal = ({ hospitalId, patients, staff, onClose, onSaved }:
   const [feedbackDays, setFeedbackDays] = useState(0);
   const [requestFeedback, setRequestFeedback] = useState(true);
   const [validDays, setValidDays] = useState(30);
-  const [medicines, setMedicines] = useState<any[]>([{ name: '', dosage: '', form: 'Tablet', timesPerDay: 3, durationDays: 7, instructions: '' }]);
+  const [patientPhone, setPatientPhone] = useState('');
+  const [medicines, setMedicines] = useState<any[]>([{ name: '', dosage: '', form: 'Tablet', timesPerDay: 3, durationDays: 7, instructions: '', customTimes: ['08:00', '14:00', '21:00', ''] }]);
   const [saving, setSaving] = useState(false);
 
   const addMedicine = () => {
-    setMedicines([...medicines, { name: '', dosage: '', form: 'Tablet', timesPerDay: 3, durationDays: 7, instructions: '' }]);
+    setMedicines([...medicines, { name: '', dosage: '', form: 'Tablet', timesPerDay: 3, durationDays: 7, instructions: '', customTimes: ['08:00', '14:00', '21:00', ''] }]);
   };
 
   const updateMed = (idx: number, field: string, value: any) => {
@@ -307,14 +308,19 @@ const NewPrescriptionModal = ({ hospitalId, patients, staff, onClose, onSaved }:
     setMedicines(medicines.filter((_, i) => i !== idx));
   };
 
-  const generateSchedule = (timesPerDay: number) => {
-    const templates: Record<number, { time: string; label: string; with: string }[]> = {
-      1: [{ time: '08:00', label: 'Morning', with: 'After breakfast' }],
-      2: [{ time: '08:00', label: 'Morning', with: 'After breakfast' }, { time: '21:00', label: 'Night', with: 'After dinner' }],
-      3: [{ time: '08:00', label: 'Morning', with: 'After breakfast' }, { time: '14:00', label: 'Afternoon', with: 'After lunch' }, { time: '21:00', label: 'Night', with: 'After dinner' }],
-      4: [{ time: '08:00', label: 'Morning', with: 'After breakfast' }, { time: '14:00', label: 'Afternoon', with: 'After lunch' }, { time: '18:00', label: 'Evening', with: 'Before dinner' }, { time: '21:00', label: 'Night', with: 'After dinner' }],
-    };
-    return templates[timesPerDay] || templates[3];
+  const generateSchedule = (timesPerDay: number, customTimes?: string[], phone?: string) => {
+    const defaultLabels = ['Morning', 'Afternoon', 'Evening', 'Night'];
+    const times = customTimes || ['08:00', '14:00', '18:00', '21:00'];
+    const res = [];
+    for (let i = 0; i < timesPerDay; i++) {
+      res.push({
+        time: times[i] || '08:00',
+        label: defaultLabels[i] || `Dose ${i + 1}`,
+        with: '',
+        phone: phone || ''
+      });
+    }
+    return res;
   };
 
   const handleSubmit = async () => {
@@ -351,7 +357,7 @@ const NewPrescriptionModal = ({ hospitalId, patients, staff, onClose, onSaved }:
         dosage: m.dosage,
         medicine_form: m.form,
         times_per_day: m.timesPerDay,
-        schedule: generateSchedule(m.timesPerDay),
+        schedule: generateSchedule(m.timesPerDay, m.customTimes, patientPhone),
         duration_days: m.durationDays,
         start_date: todayDate,
         end_date: m.durationDays ? addDays(new Date(), m.durationDays).toISOString().split('T')[0] : null,
@@ -388,7 +394,11 @@ const NewPrescriptionModal = ({ hospitalId, patients, staff, onClose, onSaved }:
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="field-label">Patient *</label>
-              <select className="field-input" value={patientId} onChange={(e) => setPatientId(e.target.value)}>
+              <select className="field-input" value={patientId} onChange={(e) => {
+                setPatientId(e.target.value);
+                const p = patients.find(pat => (pat.patients?.id || pat.id) === e.target.value);
+                setPatientPhone(p?.patients?.phone || '');
+              }}>
                 <option value="">Select patient</option>
                 {patients.map(p => <option key={p.patients?.id || p.id} value={p.patients?.id || p.id}>{p.patients?.full_name || 'Patient'}</option>)}
               </select>
@@ -400,6 +410,16 @@ const NewPrescriptionModal = ({ hospitalId, patients, staff, onClose, onSaved }:
                 {staff.map(s => <option key={s.id} value={s.id}>{s.full_name}</option>)}
               </select>
             </div>
+          </div>
+
+          <div>
+            <label className="field-label text-blue-600 font-bold">WhatsApp Reminder Phone</label>
+            <input 
+              className="field-input" 
+              placeholder="+919876543210 (Leave blank for no reminder)" 
+              value={patientPhone} 
+              onChange={(e) => setPatientPhone(e.target.value)} 
+            />
           </div>
 
           {/* Diagnosis */}
@@ -436,6 +456,26 @@ const NewPrescriptionModal = ({ hospitalId, patients, staff, onClose, onSaved }:
                       <select className="field-input" value={m.timesPerDay} onChange={(e) => updateMed(idx, 'timesPerDay', parseInt(e.target.value))}>
                         {[1, 2, 3, 4].map(n => <option key={n} value={n}>{n}×</option>)}
                       </select>
+                    </div>
+                  </div>
+                  <div className="mb-2">
+                    <label className="text-[11px] font-medium" style={{ color: '#64748B' }}>Exact Times</label>
+                    <div className="flex gap-2 mt-1 flex-wrap">
+                      {Array.from({ length: m.timesPerDay }).map((_, i) => (
+                        <input
+                          key={i}
+                          type="time"
+                          className="field-input w-[100px] text-[13px] py-1 px-2"
+                          value={m.customTimes?.[i] || ''}
+                          onChange={(e) => {
+                            const updated = [...medicines];
+                            const mt = updated[idx].customTimes ? [...updated[idx].customTimes] : ['08:00', '14:00', '18:00', '21:00'];
+                            mt[i] = e.target.value;
+                            updated[idx].customTimes = mt;
+                            setMedicines(updated);
+                          }}
+                        />
+                      ))}
                     </div>
                   </div>
                   <input className="field-input" placeholder="Special instructions (optional)" value={m.instructions} onChange={(e) => updateMed(idx, 'instructions', e.target.value)} />
