@@ -8,7 +8,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { format, formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
 import PatientPrescriptionsOverview from '@/components/patient/dashboard/PatientPrescriptionsOverview';
-import CoinWallet from '@/components/patient/dashboard/CoinWallet';
 import { generatePatientProfilePDF } from '@/utils/pdfReports';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -197,9 +196,6 @@ const PatientOverview = () => {
           </div>
         </div>
       </div>
-
-      {/* Coin Wallet */}
-      <CoinWallet patientId={patient.id} />
 
       {/* Health Summary — 4 Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
