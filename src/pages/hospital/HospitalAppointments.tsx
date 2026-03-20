@@ -4,10 +4,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { sendNotification } from '@/hooks/useNotifications';
 import JharokhaArch from '@/components/admin/JharokhaArch';
 import { Input } from '@/components/ui/input';
-import { Check, Calendar, X, Eye, RotateCcw, Plus, Loader2, ChevronDown } from 'lucide-react';
-import { format, isPast, parseISO } from 'date-fns';
+import { Check, Calendar, X, Eye, RotateCcw, Plus, Loader2, Video, PhoneOff } from 'lucide-react';
+import { format, parseISO } from 'date-fns';
 import { toast } from 'sonner';
 import type { HospitalProfile } from '@/hooks/useHospitalContext';
+import VideoCall from '@/components/telemedicine/VideoCall';
 
 type StatusFilter = 'All' | 'Pending Confirmation' | 'Confirmed' | 'Completed' | 'Cancelled';
 
@@ -36,6 +37,10 @@ const HospitalAppointments = () => {
   const [loading, setLoading] = useState(true);
   const [doctors, setDoctors] = useState<any[]>([]);
   const [doctorFilter, setDoctorFilter] = useState('');
+
+  // Video Call state
+  const [activeCallId, setActiveCallId] = useState<string | null>(null);
+  const [callChannel, setCallChannel] = useState<string>('');
 
   // Inline panel state  
   const [rejectingId, setRejectingId] = useState<string | null>(null);
@@ -82,7 +87,6 @@ const HospitalAppointments = () => {
     osc.stop(ctx.currentTime + 0.4);
   }, []);
 
-  // Fetch - uses current filter/date state (captured via closure)
   const fetchAppointments = useCallback(async (currentDate?: string, currentFilter?: StatusFilter) => {
     if (!hospital) return;
     const d = currentDate ?? date;
@@ -108,7 +112,6 @@ const HospitalAppointments = () => {
 
   useEffect(() => { fetchAppointments(); }, [hospital, filter, date, doctorFilter]);
 
-  // Doctors + Realtime subscription
   useEffect(() => {
     if (!hospital) return;
     supabase.from('hospital_staff').select('full_name').eq('hospital_id', hospital.id).eq('role', 'Doctor')
@@ -122,19 +125,16 @@ const HospitalAppointments = () => {
         playNotificationSound();
         toast.info('📅 New appointment request received!');
 
-        // Refetch single row with joins
         const { data: newRow } = await supabase
           .from('patient_appointments')
           .select('*, patients(id, full_name, profile_photo_url, phone, blood_group)')
           .eq('id', payload.new.id)
           .single();
 
-        // Only prepend if it matches the currently selected date
         if (newRow && newRow.appointment_date === date) {
           setAppointments(prev => [newRow, ...prev]);
         }
 
-        // Browser notification if tab hidden
         if (document.hidden && Notification.permission === 'granted') {
           new Notification('📅 New Appointment — Sanjeevani', {
             body: `New request for ${newRow?.patients?.full_name || 'a patient'} on ${newRow?.appointment_date}`,
@@ -146,24 +146,20 @@ const HospitalAppointments = () => {
     return () => { supabase.removeChannel(ch); };
   }, [hospital, date, playNotificationSound]);
 
-  // ----------- ACTIONS -----------
-
   const handleAccept = async (a: any) => {
     try {
-      const { data, error } = await supabase.from('patient_appointments')
+      const { error } = await supabase.from('patient_appointments')
         .update({ status: 'accepted', updated_at: new Date().toISOString() })
-        .eq('id', a.id)
-        .select();
+        .eq('id', a.id);
 
       if (error) {
-        console.error('Accept Appointment error:', error);
-        toast.error(`Accept failed: ${error.message || 'Validation error'}`);
+        toast.error(`Accept failed: ${error.message}`);
         return;
       }
 
       setAppointments(prev => prev.map(x => x.id === a.id ? { ...x, status: 'accepted' } : x));
       toast.success('✅ Appointment accepted.');
-      // Notify patient
+      
       if (a.patients?.id) {
         const { data: pt } = await supabase.from('patients').select('supabase_user_id').eq('id', a.patients.id).single();
         if (pt?.supabase_user_id) {
@@ -177,8 +173,28 @@ const HospitalAppointments = () => {
         }
       }
     } catch (err: any) {
-      console.error('Network or unexpected error while accepting appointment:', err);
-      toast.error('An unexpected error occurred while accepting.');
+      toast.error('An unexpected error occurred.');
+    }
+  };
+
+  const handleStartCall = async (a: any) => {
+    const channel = `call_${a.id.slice(0, 8)}`;
+    setCallChannel(channel);
+    setActiveCallId(a.id);
+    
+    // Notify patient about the call
+    if (a.patients?.id) {
+      const { data: pt } = await supabase.from('patients').select('supabase_user_id').eq('id', a.patients.id).single();
+      if (pt?.supabase_user_id) {
+        await sendNotification({
+          recipientUserId: pt.supabase_user_id,
+          recipientType: 'patient',
+          title: '📞 Video Call Started',
+          body: `Dr. ${a.doctor_name} is waiting for you. Click to join the call.`,
+          type: 'alert',
+          actionUrl: `/patient/dashboard/appointments?call=${channel}`,
+        });
+      }
     }
   };
 
@@ -200,8 +216,7 @@ const HospitalAppointments = () => {
       setRejectingId(null);
       setRejectReason('');
       setRejectOther('');
-      toast.success('Appointment rejected. Patient will be notified.');
-      // Notify patient
+      toast.success('Appointment rejected.');
       if (a.patients?.id) {
         const { data: pt } = await supabase.from('patients').select('supabase_user_id').eq('id', a.patients.id).single();
         if (pt?.supabase_user_id) {
@@ -242,8 +257,7 @@ const HospitalAppointments = () => {
         original_date: x.rescheduled_by_hospital ? x.original_date : x.appointment_date,
       } : x));
       setReschedulingId(null);
-      toast.success('🗓 Appointment rescheduled. Patient will see the new time.');
-      // Notify patient
+      toast.success('🗓 Appointment rescheduled.');
       if (a.patients?.id) {
         const { data: pt } = await supabase.from('patients').select('supabase_user_id').eq('id', a.patients.id).single();
         if (pt?.supabase_user_id) {
@@ -251,7 +265,7 @@ const HospitalAppointments = () => {
             recipientUserId: pt.supabase_user_id,
             recipientType: 'patient',
             title: '🗓 Appointment Rescheduled',
-            body: `Your appointment with ${rescheduleForm.doctor_name || a.doctor_name} has been moved to ${rescheduleForm.date}${rescheduleForm.time ? ' at ' + rescheduleForm.time : ''}. ${rescheduleForm.note ? '\n"' + rescheduleForm.note + '"' : ''}`,
+            body: `Your appointment with ${rescheduleForm.doctor_name || a.doctor_name} has been moved to ${rescheduleForm.date}${rescheduleForm.time ? ' at ' + rescheduleForm.time : ''}.`,
             type: 'appointment',
           });
         }
@@ -264,6 +278,19 @@ const HospitalAppointments = () => {
 
   return (
     <div className="space-y-6" onClick={initAudio}>
+      {/* Video Call Modal */}
+      {activeCallId && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="max-w-4xl w-full">
+            <VideoCall 
+              channelName={callChannel} 
+              userName={hospital?.hospital_name || 'Hospital'} 
+              onClose={() => setActiveCallId(null)} 
+            />
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -325,22 +352,16 @@ const HospitalAppointments = () => {
                 const st = STATUS_STYLES[a.status] || STATUS_STYLES['Pending Confirmation'];
                 const isPending = a.status === 'Upcoming' || a.status === 'Pending Confirmation';
                 const isConfirmed = a.status === 'Confirmed' || a.status === 'accepted';
-                const isDone = a.status === 'Completed' || a.status === 'Cancelled';
 
                 return (
                   <>
                     <tr key={a.id}
                       style={{ borderBottom: rejectingId === a.id || reschedulingId === a.id ? 'none' : '1px solid #E2EEF1' }}
                       className="hover:bg-gray-50/50 transition-colors">
-                      {/* Time */}
                       <td className="px-4 py-3 font-mono whitespace-nowrap" style={{ color: '#0891B2' }}>
                         {a.appointment_time || '—'}
-                        {a.rescheduled_by_hospital && (
-                          <span className="block text-[10px] font-medium px-1.5 py-0.5 rounded-full mt-0.5 w-fit" style={{ background: '#FFFBEB', color: '#D97706' }}>⏰ Rescheduled</span>
-                        )}
                       </td>
 
-                      {/* Patient */}
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           {a.patients?.profile_photo_url ? (
@@ -353,37 +374,23 @@ const HospitalAppointments = () => {
                           <div>
                             <p className="font-medium" style={{ color: '#1E293B' }}>{a.patients?.full_name || '—'}</p>
                             {a.patients?.phone && <p className="text-[11px]" style={{ color: '#64748B' }}>{a.patients.phone}</p>}
-                            {a.patients?.blood_group && <p className="text-[10px] font-bold" style={{ color: '#EF4444' }}>{a.patients.blood_group}</p>}
                           </div>
                         </div>
                       </td>
 
-                      {/* Reason */}
                       <td className="px-4 py-3 max-w-[160px]" style={{ color: '#1E293B' }}>
                         <p className="truncate">{a.reason || '—'}</p>
-                        {a.cancellation_reason && (
-                          <p className="text-[10px] mt-0.5" style={{ color: '#EF4444' }}>Reason: {a.cancellation_reason}</p>
-                        )}
                       </td>
 
-                      {/* Doctor */}
                       <td className="px-4 py-3 whitespace-nowrap" style={{ color: '#1E293B' }}>
                         {a.doctor_name || '—'}
-                        {a.specialization && <p className="text-[11px]" style={{ color: '#64748B' }}>{a.specialization}</p>}
                       </td>
 
-                      {/* Status badge */}
                       <td className="px-4 py-3">
                         <span className="px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap"
                           style={{ background: st.bg, color: st.color }}>{st.label}</span>
-                        {a.rescheduled_by_hospital && a.original_date && (
-                          <p className="text-[10px] mt-0.5" style={{ color: '#94A3B8' }}>
-                            Was: {a.original_date}{a.original_time ? ' ' + a.original_time : ''}
-                          </p>
-                        )}
                       </td>
 
-                      {/* Action buttons */}
                       <td className="px-4 py-3">
                         <div className="flex gap-1.5 flex-wrap">
                           {isPending && (
@@ -393,7 +400,7 @@ const HospitalAppointments = () => {
                                 style={{ background: '#10B981' }}>
                                 <Check size={12} /> Accept
                               </button>
-                              <button onClick={() => { setRejectingId(rejectingId === a.id ? null : a.id); setReschedulingId(null); }}
+                              <button onClick={() => setRejectingId(a.id)}
                                 className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-semibold"
                                 style={{ border: '1px solid #EF4444', color: '#EF4444' }}>
                                 <X size={12} /> Reject
@@ -402,12 +409,17 @@ const HospitalAppointments = () => {
                           )}
                           {isConfirmed && (
                             <>
+                              <button onClick={() => handleStartCall(a)}
+                                className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-semibold text-white"
+                                style={{ background: '#8B5CF6' }}>
+                                <Video size={12} /> Start Call
+                              </button>
                               <button onClick={() => handleComplete(a.id)}
                                 className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-semibold text-white"
                                 style={{ background: '#0891B2' }}>
                                 <Check size={12} /> Complete
                               </button>
-                              <button onClick={() => { setReschedulingId(reschedulingId === a.id ? null : a.id); setRejectingId(null); setRescheduleForm({ date: a.appointment_date || '', time: a.appointment_time || '', doctor_name: a.doctor_name || '', note: '' }); }}
+                              <button onClick={() => setReschedulingId(a.id)}
                                 className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-semibold"
                                 style={{ border: '1px solid #F59E0B', color: '#D97706' }}>
                                 <RotateCcw size={12} /> Reschedule
@@ -422,90 +434,36 @@ const HospitalAppointments = () => {
                       </td>
                     </tr>
 
-                    {/* REJECT INLINE PANEL */}
                     {rejectingId === a.id && (
                       <tr key={`reject-${a.id}`}>
                         <td colSpan={6} className="px-4 pb-4 pt-0">
-                          <div className="rounded-lg p-4" style={{ background: 'white', border: '1px solid #FECACA' }}>
-                            <JharokhaArch color="#EF4444" opacity={0.12} />
-                            <p className="text-[13px] font-semibold mb-3 mt-1" style={{ color: '#1E293B' }}>Reason for rejection:</p>
-                            <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
-                              className="field-input mb-2 text-[13px]">
+                          <div className="rounded-lg p-4" style={{ background: 'white', border: '1px solid #EF4444' }}>
+                            <p className="text-[13px] font-semibold mb-3 mt-1">Reason for rejection:</p>
+                            <select value={rejectReason} onChange={e => setRejectReason(e.target.value)} className="w-full mb-2 text-[13px] border rounded-md p-2">
                               <option value="">Select a reason...</option>
                               {REJECT_REASONS.map(r => <option key={r} value={r}>{r}</option>)}
                             </select>
-                            {rejectReason === 'Other' && (
-                              <textarea value={rejectOther} onChange={e => setRejectOther(e.target.value)}
-                                placeholder="Describe the reason..." className="field-input mb-2 text-[13px]" rows={2} />
-                            )}
-                            <div className="flex gap-2 mt-2">
-                              <button onClick={() => handleReject(a)} disabled={rejectSaving || !rejectReason}
-                                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-semibold text-white disabled:opacity-50"
-                                style={{ background: '#EF4444' }}>
-                                {rejectSaving ? <Loader2 size={12} className="animate-spin" /> : null}
-                                Confirm Rejection
-                              </button>
-                              <button onClick={() => { setRejectingId(null); setRejectReason(''); setRejectOther(''); }}
-                                className="px-4 py-2 text-[12px]" style={{ color: '#64748B' }}>Cancel</button>
+                            <div className="flex gap-2">
+                              <button onClick={() => handleReject(a)} className="px-4 py-2 bg-red-500 text-white rounded-md text-[12px]">Reject</button>
+                              <button onClick={() => setRejectingId(null)} className="px-4 py-2 text-[12px]">Cancel</button>
                             </div>
                           </div>
                         </td>
                       </tr>
                     )}
 
-                    {/* RESCHEDULE INLINE PANEL */}
                     {reschedulingId === a.id && (
                       <tr key={`reschedule-${a.id}`}>
                         <td colSpan={6} className="px-4 pb-4 pt-0">
                           <div className="rounded-lg p-4" style={{ background: 'white', border: '1px solid #F59E0B' }}>
-                            <JharokhaArch color="#F59E0B" opacity={0.18} />
-                            <p className="text-[13px] font-bold mb-1 mt-1" style={{ color: '#1E293B' }}>🗓 Reschedule Appointment</p>
-                            {a.appointment_date && (
-                              <p className="text-[12px] mb-3" style={{ color: '#94A3B8' }}>
-                                Patient requested: {format(parseISO(a.appointment_date), 'EEE, dd MMM yyyy')}
-                                {a.appointment_time ? ` at ${a.appointment_time}` : ''}
-                              </p>
-                            )}
+                            <p className="text-[13px] font-bold mb-3">Reschedule Appointment</p>
                             <div className="grid grid-cols-2 gap-3 mb-3">
-                              <div>
-                                <label className="field-label">New Date *</label>
-                                <input type="date" className="field-input text-[12px]"
-                                  min={format(new Date(), 'yyyy-MM-dd')}
-                                  value={rescheduleForm.date}
-                                  onChange={e => setRescheduleForm(f => ({ ...f, date: e.target.value }))} />
-                              </div>
-                              <div>
-                                <label className="field-label">New Time</label>
-                                <input type="time" className="field-input text-[12px]"
-                                  value={rescheduleForm.time}
-                                  onChange={e => setRescheduleForm(f => ({ ...f, time: e.target.value }))} />
-                              </div>
-                            </div>
-                            <div className="mb-3">
-                              <label className="field-label">Assign Doctor</label>
-                              <select className="field-input text-[12px]"
-                                value={rescheduleForm.doctor_name}
-                                onChange={e => setRescheduleForm(f => ({ ...f, doctor_name: e.target.value }))}>
-                                <option value="">Keep current ({a.doctor_name})</option>
-                                {doctors.map(d => <option key={d.full_name} value={d.full_name}>{d.full_name}</option>)}
-                              </select>
-                            </div>
-                            <div className="mb-3">
-                              <label className="field-label">Note to Patient (optional)</label>
-                              <textarea className="field-input text-[12px]" rows={2}
-                                placeholder="e.g. Your appointment has been moved. Please arrive 10 minutes early."
-                                value={rescheduleForm.note}
-                                onChange={e => setRescheduleForm(f => ({ ...f, note: e.target.value }))} />
+                              <input type="date" className="border rounded p-2 text-[12px]" value={rescheduleForm.date} onChange={e => setRescheduleForm(f => ({ ...f, date: e.target.value }))} />
+                              <input type="time" className="border rounded p-2 text-[12px]" value={rescheduleForm.time} onChange={e => setRescheduleForm(f => ({ ...f, time: e.target.value }))} />
                             </div>
                             <div className="flex gap-2">
-                              <button onClick={() => handleReschedule(a)} disabled={rescheduleSaving || !rescheduleForm.date}
-                                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-semibold text-white disabled:opacity-50"
-                                style={{ background: '#F59E0B' }}>
-                                {rescheduleSaving ? <Loader2 size={12} className="animate-spin" /> : null}
-                                Confirm Reschedule
-                              </button>
-                              <button onClick={() => setReschedulingId(null)}
-                                className="px-4 py-2 text-[12px]" style={{ color: '#64748B' }}>Cancel</button>
+                              <button onClick={() => handleReschedule(a)} className="px-4 py-2 bg-amber-500 text-white rounded-md text-[12px]">Reschedule</button>
+                              <button onClick={() => setReschedulingId(null)} className="px-4 py-2 text-[12px]">Cancel</button>
                             </div>
                           </div>
                         </td>

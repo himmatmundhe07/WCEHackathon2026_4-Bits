@@ -1,0 +1,16 @@
+[build]
+  # The command to run to build your project
+  command = "npm run build"
+  
+  # The directory that contains the deploy-ready files
+  publish = "dist"
+
+[build.environment]
+  # Ensures Node versions are consistent
+  NODE_VERSION = "20"
+
+[[redirects]]
+  # This is crucial for React Router to work properly on Netlify
+  from = "/*"
+  to = "/index.html"
+  status = 200
