@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 const navItems = [
   { label: 'Overview', icon: BarChart3, path: '/admin/dashboard' },
   { label: 'Hospital Approvals', icon: Building2, path: '/admin/hospitals' },
-  { label: 'Pharmacy Approvals', icon: Pill, path: '/admin/pharmacy-approvals' },
   { label: 'Patients', icon: Users, path: '/admin/patients' },
   { label: 'Activity Log', icon: ClipboardList, path: '/admin/logs' },
 
@@ -38,7 +37,6 @@ const AdminSidebar = ({ mobileOpen, onMobileClose, adminEmail }: AdminSidebarPro
   const location = useLocation();
   const navigate = useNavigate();
   const [pendingCount, setPendingCount] = useState(0);
-  const [pendingPharmaSubs, setPendingPharmaSubs] = useState(0);
 
   useEffect(() => {
     const fetchPending = async () => {
@@ -49,16 +47,7 @@ const AdminSidebar = ({ mobileOpen, onMobileClose, adminEmail }: AdminSidebarPro
       setPendingCount(count || 0);
     };
 
-    const fetchPendingPharmaSubs = async () => {
-      const { count } = await (supabase as any)
-        .from('pharmacy_subscriptions')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'pending_payment');
-      setPendingPharmaSubs(count || 0);
-    };
-
     fetchPending();
-    fetchPendingPharmaSubs();
 
     const channel = supabase
       .channel('pending-hospitals')
@@ -67,16 +56,8 @@ const AdminSidebar = ({ mobileOpen, onMobileClose, adminEmail }: AdminSidebarPro
       })
       .subscribe();
 
-    const pharmaChannel = supabase
-      .channel('pending-pharma-subs')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'pharmacy_subscriptions' }, () => {
-        fetchPendingPharmaSubs();
-      })
-      .subscribe();
-
     return () => {
       supabase.removeChannel(channel);
-      supabase.removeChannel(pharmaChannel);
     };
   }, []);
 
@@ -128,11 +109,6 @@ const AdminSidebar = ({ mobileOpen, onMobileClose, adminEmail }: AdminSidebarPro
               {item.label === 'Hospital Approvals' && pendingCount > 0 && (
                 <span className="ml-auto text-[10px] font-bold text-white rounded-full w-5 h-5 flex items-center justify-center" style={{ background: '#EF4444' }}>
                   {pendingCount}
-                </span>
-              )}
-              {item.label === 'Pharmacy Approvals' && pendingPharmaSubs > 0 && (
-                <span className="ml-auto text-[10px] font-bold text-white rounded-full w-5 h-5 flex items-center justify-center" style={{ background: '#F59E0B' }}>
-                  {pendingPharmaSubs}
                 </span>
               )}
             </button>

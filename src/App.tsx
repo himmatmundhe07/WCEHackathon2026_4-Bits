@@ -13,7 +13,7 @@ import PharmaRegistration from "./pages/PharmaRegistration";
 import PharmaDashboardLayout from "./pages/pharma/PharmaDashboardLayout";
 import PharmaOverview from "./pages/pharma/PharmaOverview";
 import PharmaAnalyticsPage from "./pages/pharma/PharmaAnalyticsPage";
-import PharmaSubscriptionRequired from "./pages/pharma/PharmaSubscriptionRequired";
+
 import PharmaRevenue from "./pages/pharma/PharmaRevenue";
 import PharmaStatements from "./pages/pharma/PharmaStatements";
 import PharmaBankDetails from "./pages/pharma/PharmaBankDetails";
@@ -52,9 +52,6 @@ import HospitalRejected from "./pages/hospital/HospitalRejected";
 import HospitalPrescriptions from "./pages/hospital/HospitalPrescriptions";
 import HospitalPrescriptionAnalytics from "./pages/hospital/HospitalPrescriptionAnalytics";
 import PublicQRProfile from "./pages/PublicQRProfile";
-import PricingPage from "./pages/PricingPage";
-
-import AdminPharmacyApprovals from "./pages/admin/AdminPharmacyApprovals";
 
 const queryClient = new QueryClient();
 
@@ -69,7 +66,6 @@ const App = () => (
           <Route path="/register" element={<HospitalRegistration />} />
           <Route path="/patient/signup" element={<PatientSignup />} />
           <Route path="/login" element={<UnifiedLogin />} />
-          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/patient/login" element={<UnifiedLogin />} />
           <Route path="/hospital/login" element={<UnifiedLogin />} />
           <Route path="/pharma/login" element={<UnifiedLogin />} />
@@ -105,7 +101,7 @@ const App = () => (
             <Route path="settings" element={<HospitalSettings />} />
           </Route>
           <Route path="/pharma/register" element={<PharmaRegistration />} />
-          <Route path="/pharma/subscription-required" element={<PharmaSubscriptionRequired />} />
+
           {/* Pharma dashboard routes */}
           <Route path="/pharma/dashboard" element={<PharmaDashboardLayout />}>
             <Route index element={<PharmaOverview />} />
@@ -124,8 +120,6 @@ const App = () => (
             <Route path="patients" element={<Patients />} />
             <Route path="logs" element={<ActivityLog />} />
             <Route path="settings" element={<AdminSettings />} />
-
-            <Route path="pharmacy-approvals" element={<AdminPharmacyApprovals />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="/qr/:patientId" element={<PublicQRProfile />} />

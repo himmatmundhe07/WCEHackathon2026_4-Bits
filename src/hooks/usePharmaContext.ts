@@ -34,28 +34,6 @@ export function usePharmaContext() {
         return;
       }
 
-      // ── Check active subscription ─────────────────────────────────────────
-      const { data: subscription } = await (supabase as any)
-        .from('pharmacy_subscriptions')
-        .select('id, status, expires_at')
-        .eq('pharmacy_id', user.id)
-        .eq('status', 'active')
-        .order('expires_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      const hasActiveSub =
-        subscription &&
-        subscription.status === 'active' &&
-        new Date(subscription.expires_at) > new Date();
-
-      if (!hasActiveSub) {
-        // Redirect to subscription-required page — the pharmacy has logged in
-        // but hasn't paid / admin hasn't verified yet.
-        navigate('/pharma/subscription-required', { replace: true });
-        return;
-      }
-
       // ── Fetch / auto-create pharmacy profile ───────────────────────────────
       let { data: profile } = await (supabase as any)
         .from('pharmacies')
