@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   BarChart3, Users, CalendarDays, AlertTriangle, BedDouble,
   UserCog, Package, Receipt, TrendingUp, FolderOpen, Settings,
-  LogOut, X, Pill
+  LogOut, X, Pill, Droplet
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ const navItems = [
   { label: 'Appointments', icon: CalendarDays, path: '/hospital/dashboard/appointments', badgeKey: 'appointments' },
   { label: 'Prescriptions', icon: Pill, path: '/hospital/dashboard/prescriptions', badgeKey: 'prescriptions' },
   { label: 'Emergency Alerts', icon: AlertTriangle, path: '/hospital/dashboard/emergency', badgeKey: 'emergency' },
+  { label: 'Blood Network', icon: Droplet, path: '/hospital/dashboard/blood-network' },
   { label: 'Bed Management', icon: BedDouble, path: '/hospital/dashboard/beds' },
   { label: 'Staff Roster', icon: UserCog, path: '/hospital/dashboard/staff' },
   { label: 'Inventory', icon: Package, path: '/hospital/dashboard/inventory', badgeKey: 'inventory' },

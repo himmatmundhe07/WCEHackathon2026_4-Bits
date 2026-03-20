@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Pill, ClipboardList, Calendar, Search, ShieldAlert, Settings, LogOut, X, QrCode, Store, Crown, Activity } from 'lucide-react';
+import { Home, Pill, ClipboardList, Calendar, Search, ShieldAlert, Settings, LogOut, X, QrCode, Store, Crown, Activity, Droplet } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { PatientProfile } from './PatientProtectedRoute';
@@ -11,6 +11,7 @@ const navItems = [
   { labelKey: 'sidebar.appointments', icon: Calendar, path: '/patient/dashboard/appointments' },
   { labelKey: '🏃 My Recovery Plan', icon: Activity, path: '/patient/dashboard/fitness' },
   { labelKey: 'sidebar.findDoctors', icon: Search, path: '/patient/dashboard/find' },
+  { labelKey: '🩸 Blood Network', icon: Droplet, path: '/patient/dashboard/blood-network' },
   { labelKey: 'sidebar.findPharmacy', icon: Store, path: '/patient/dashboard/pharmacy' },
   { labelKey: 'sidebar.emergencyProfile', icon: ShieldAlert, path: '/patient/dashboard/emergency' },
   { labelKey: 'sidebar.settings', icon: Settings, path: '/patient/dashboard/settings' },

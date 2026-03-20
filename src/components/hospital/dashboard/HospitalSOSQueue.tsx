@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import JharokhaArch from '@/components/admin/JharokhaArch';
-import { AlertCircle, MapPin, Truck, CheckCircle2, ChevronRight, LocateFixed, Video, UserCircle2 } from 'lucide-react';
+import { AlertCircle, MapPin, Truck, CheckCircle2, ChevronRight, LocateFixed, Video, UserCircle2, Sparkles, BrainCircuit } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { generateAITriageReport } from '@/services/geminiService';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -32,6 +33,8 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
 export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string }) {
   const [activeSOS, setActiveSOS] = useState<any[]>([]);
   const [hospitalCoords, setHospitalCoords] = useState<{lat: number, lng: number} | null>(null);
+  const [aiTriageResults, setAiTriageResults] = useState<Record<string, string>>({});
+  const [generatingTriage, setGeneratingTriage] = useState<Record<string, boolean>>({});
 
   // Fetch Hospital's own coordinates first
   useEffect(() => {
@@ -103,6 +106,25 @@ export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string })
     fetchActive();
   };
 
+  const handleAITriage = async (sos: any) => {
+    if (!sos.patient_id) {
+       toast.error("Unregistered Patient. No medical history for AI to analyze.");
+       return;
+    }
+    setGeneratingTriage(p => ({...p, [sos.id]: true}));
+    try {
+      const { data: patientData } = await (supabase as any).from('patients').select('allergies, chronic_conditions, blood_group, age').eq('id', sos.patient_id).single();
+      const profileInfo = `Allergies: ${patientData?.allergies?.join(', ') || 'None'}. Conditions: ${patientData?.chronic_conditions?.join(', ') || 'None'}. Blood Group: ${patientData?.blood_group || 'Unknown'}. Age: ${patientData?.age || 'Unknown'}.`;
+      
+      const result = await generateAITriageReport(profileInfo, sos.emergency_type);
+      setAiTriageResults(p => ({...p, [sos.id]: result}));
+    } catch (e) {
+      toast.error("AI Triage failed");
+    } finally {
+      setGeneratingTriage(p => ({...p, [sos.id]: false}));
+    }
+  };
+
   if(activeSOS.length === 0) return null;
 
   return (
@@ -145,7 +167,7 @@ export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string })
                  )}
                </div>
 
-                {sos.video_url ? (
+                 {sos.video_url ? (
                   <div className="flex gap-2 mb-3">
                     <a href={sos.video_url} target="_blank" rel="noreferrer" className="flex-1 py-2 rounded-lg text-[11px] font-bold text-white flex items-center justify-center gap-1 transition-all hover:bg-slate-700" style={{ background: '#1E293B' }}>
                        <Video size={14} /> Evidence
@@ -155,21 +177,42 @@ export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string })
                     </Link>
                   </div>
                 ) : (
-                  <Link to={`/qr/${sos.patient_id}`} target="_blank" className="w-full mb-3 py-2 rounded-lg text-[12px] font-bold text-slate-700 flex items-center justify-center gap-2 transition-all hover:bg-slate-200 border border-slate-300 bg-white">
+                  <Link to={`/qr/${sos.patient_id}`} target="_blank" className="w-full mb-3 py-2 rounded-lg text-[12px] font-bold text-slate-700 flex items-center justify-center gap-2 transition-all hover:bg-slate-200 border border-slate-300 bg-white shadow-sm">
                      <UserCircle2 size={16} /> View Full Medical Profile
                   </Link>
                 )}
 
+               {/* AI Triage Section */}
+               <div className="mb-4">
+                 {aiTriageResults[sos.id] ? (
+                    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 p-4 rounded-xl relative overflow-hidden">
+                       <div className="absolute top-0 right-0 p-2 opacity-20"><BrainCircuit size={48} className="text-indigo-400"/></div>
+                       <h4 className="text-[10px] font-black uppercase text-indigo-500 tracking-widest mb-2 flex items-center gap-1"><Sparkles size={12}/> AI Triage Prediction</h4>
+                       {aiTriageResults[sos.id].split('\n').map((line, i) => (
+                           <p key={i} className={`text-sm mb-1 ${line.includes('TRIAGE: RED') ? 'font-black text-red-600' : line.includes('TRIAGE: YELLOW') ? 'font-bold text-yellow-600' : 'text-slate-700 font-medium'}`}>{line}</p>
+                       ))}
+                    </div>
+                 ) : (
+                   <button 
+                     onClick={() => handleAITriage(sos)}
+                     disabled={generatingTriage[sos.id]}
+                     className="w-full py-2.5 rounded-xl text-[12px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-sm transition-all hover:bg-indigo-100 flex items-center justify-center gap-2 disabled:opacity-50"
+                   >
+                     {generatingTriage[sos.id] ? <span className="animate-pulse flex items-center gap-2"><BrainCircuit size={16} className="animate-spin"/> Analyzing Profile...</span> : <><BrainCircuit size={16}/> Generate AI Predictive Triage</>}
+                   </button>
+                 )}
+               </div>
+
                <div className="mt-auto">
                  {sos.status === 'pending' ? (
-                   <button onClick={() => updateStatus(sos.id, 'accepted')} className="w-full py-2.5 rounded-lg text-[13px] font-bold text-white transition-opacity hover:opacity-90 flex justify-center items-center gap-2" style={{ background: '#DC2626' }}>
-                     Accept & Dispatch Ambulance <Truck size={16} />
+                   <button onClick={() => updateStatus(sos.id, 'accepted')} className="w-full py-3 rounded-xl text-[13px] font-black text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95 flex justify-center items-center gap-2" style={{ background: '#DC2626', boxShadow: '0 4px 14px 0 rgba(220, 38, 38, 0.39)' }}>
+                     Accept & Dispatch Ambulance <Truck size={18} />
                    </button>
                  ) : (
                    <div className="flex gap-2">
-                     {sos.status === 'accepted' && <button onClick={() => updateStatus(sos.id, 'dispatched')} className="flex-1 py-2 rounded-lg text-[12px] font-bold text-white" style={{ background: '#F59E0B' }}>Mark Dispatched</button>}
-                     {sos.status === 'dispatched' && <button onClick={() => updateStatus(sos.id, 'arrived')} className="flex-1 py-2 rounded-lg text-[12px] font-bold text-white" style={{ background: '#0891B2' }}>Ambulance Arrived</button>}
-                     {sos.status === 'arrived' && <button onClick={() => updateStatus(sos.id, 'resolved')} className="flex-1 py-2 rounded-lg text-[12px] font-bold text-white" style={{ background: '#10B981' }}>Resolve Case ✅</button>}
+                     {sos.status === 'accepted' && <button onClick={() => updateStatus(sos.id, 'dispatched')} className="flex-1 py-3 rounded-xl text-[12px] font-black text-white shadow-md" style={{ background: '#F59E0B' }}>Mark Dispatched</button>}
+                     {sos.status === 'dispatched' && <button onClick={() => updateStatus(sos.id, 'arrived')} className="flex-1 py-3 rounded-xl text-[12px] font-black text-white shadow-md" style={{ background: '#0891B2' }}>Ambulance Arrived</button>}
+                     {sos.status === 'arrived' && <button onClick={() => updateStatus(sos.id, 'resolved')} className="flex-1 py-3 rounded-xl text-[12px] font-black text-white shadow-md" style={{ background: '#10B981' }}>Resolve Case ✅</button>}
                    </div>
                  )}
                </div>

@@ -3,8 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Shield, AlertTriangle, Droplet, Pill, Phone, User, Heart, Activity } from 'lucide-react';
 import { toast } from 'sonner';
-import PatientSOSPanel from '@/components/patient/dashboard/PatientSOSPanel';
-import EmergencyAssistant from '@/components/patient/dashboard/EmergencyAssistant';
 
 /**
  * Helper to calculate distance between two coordinates in km using Haversine formula
@@ -166,176 +164,169 @@ const PublicQRProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-12">
-      {/* Top Banner */}
-      <div className="bg-red-600 text-white p-4 text-center shadow-md animate-pulse">
-        <h1 className="text-xl font-black uppercase tracking-wider flex items-center justify-center gap-2">
-          <Shield /> Emergency Medical Profile
-        </h1>
-        <p className="text-sm font-medium opacity-90 mt-1">
-          Authorized for Emergency Personnel Only
-        </p>
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      {/* Premium Dark Header */}
+      <div className="bg-slate-900 relative overflow-hidden pb-16 pt-8 px-4">
+         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+         <div className="absolute -top-24 -right-24 opacity-5 transform rotate-12"><Shield size={300} className="text-white" /></div>
+         
+         <div className="max-w-xl mx-auto relative z-10 flex flex-col items-center">
+            <div className="bg-red-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase mb-6 flex items-center gap-2 shadow-lg shadow-red-900/50">
+              <Shield size={14}/> Verified Emergency Protocol
+            </div>
+
+            <div className="w-32 h-32 bg-slate-800 rounded-[2rem] flex justify-center items-center border-4 border-slate-700 shadow-2xl overflow-hidden mb-5">
+               {patient.profile_photo_url ? (
+                  <img src={patient.profile_photo_url} alt="Profile" className="w-full h-full object-cover" />
+               ) : (
+                  <User size={64} className="text-slate-600" />
+               )}
+            </div>
+
+            <h1 className="text-3xl font-black text-white text-center mb-2 tracking-tight">{patient.full_name}</h1>
+            <div className="flex flex-wrap justify-center gap-3 text-sm font-bold text-slate-400">
+               <span className="flex items-center gap-1.5"><User size={16}/> {patient.age || 'Unknown Age'} yrs</span>
+               <span className="opacity-50">•</span>
+               <span>{patient.gender || 'Unknown Gender'}</span>
+               {patient.city && (
+                 <>
+                   <span className="opacity-50">•</span>
+                   <span>{patient.city}</span>
+                 </>
+               )}
+            </div>
+         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 mt-6 space-y-4">
-        {/* Nearest Hospital Info */}
-        {scanLogged && (
-           <div className="bg-green-50 border border-green-200 text-green-800 p-4 rounded-xl flex items-start gap-3 shadow-sm">
-             <div className="bg-green-100 p-2 rounded-full">
-               <Activity size={20} className="text-green-600" />
+      <div className="max-w-xl w-full mx-auto px-4 -mt-10 relative z-20 space-y-5 pb-20">
+         
+         {/* Critical Vitals Grid - Floating over header seam */}
+         <div className="grid grid-cols-2 gap-4">
+           <div className="bg-white p-5 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center">
+             <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-3 shadow-inner">
+                <Droplet size={24} className="fill-red-100" />
+             </div>
+             <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Blood Type</p>
+             <p className="text-2xl font-black text-slate-800">{patient.blood_group || 'Unknown'}</p>
+           </div>
+           
+           <div className="bg-white p-5 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center">
+             <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 mb-3 shadow-inner">
+                <Heart size={24} className="fill-emerald-100" />
+             </div>
+             <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Organ Donor</p>
+             <p className="text-2xl font-black text-slate-800">{patient.organ_donor ? 'Yes' : 'No'}</p>
+           </div>
+         </div>
+
+         {/* Action Log Result */}
+         {scanLogged && (
+           <div className="bg-slate-900 border border-slate-700 text-slate-300 p-4 rounded-2xl flex items-start gap-3 shadow-lg">
+             <div className="bg-green-500/20 p-2 rounded-xl border border-green-500/30">
+               <Activity size={18} className="text-green-400" />
              </div>
              <div>
-               <h3 className="font-bold text-sm">Emergency Alert Triggered</h3>
-               <p className="text-xs mt-1">
+               <h3 className="font-bold text-sm text-white">Emergency Ping Sent</h3>
+               <p className="text-[11px] mt-1 text-slate-400">
                  {nearestHospital 
-                    ? `An alert was automatically sent to the dashboard of ${nearestHospital.hospital_name}.`
-                    : 'An alert has been dispatched to the generic hospital dashboard system.'}
+                    ? `Hospital Alerted: ${nearestHospital.hospital_name}`
+                    : 'System Alert Dispatched'}
                </p>
              </div>
            </div>
          )}
 
-         {/* Removed from top for better flow */}
-
-         {/* Patient Identity Header */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row items-center gap-6">
-          <div className="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center border-4 border-red-50">
-            {patient.profile_photo_url ? (
-               <img src={patient.profile_photo_url} alt="Profile" className="w-full h-full rounded-full object-cover" />
-            ) : (
-               <User size={48} />
-            )}
-          </div>
-          <div className="text-center md:text-left flex-1">
-            <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">{patient.full_name}</h2>
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-2 text-slate-600 font-medium">
-              <span>{patient.age || 'Age Unknown'} yrs</span>
-              <span>•</span>
-              <span>{patient.gender || 'Gender Unspecified'}</span>
-              {patient.city && (
-                 <>
-                   <span>•</span>
-                   <span>{patient.city}</span>
-                 </>
-              )}
+         {/* Medical Data Cards */}
+         <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            {/* Allergies */}
+            <div className="p-6 border-b border-slate-100 relative overflow-hidden">
+               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-red-500"></div>
+               <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                 <AlertTriangle size={14} className="text-red-500"/> Known Allergies
+               </h3>
+               {patient.allergies && patient.allergies.length > 0 ? (
+                 <div className="flex flex-wrap gap-2">
+                   {patient.allergies.map((allergy: string, i: number) => (
+                     <span key={i} className="px-3 py-1.5 bg-red-50 border border-red-100 text-red-700 font-bold rounded-xl text-sm">
+                       {allergy}
+                     </span>
+                   ))}
+                 </div>
+               ) : (
+                 <p className="text-slate-400 font-medium text-sm">No recorded allergies.</p>
+               )}
             </div>
-          </div>
-        </div>
 
-        {/* Critical Vitals - THE MOST IMPORTANT INFO */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-red-50 rounded-2xl p-5 border-2 border-red-200 shadow-sm flex flex-col items-center justify-center text-center">
-            <Droplet className="text-red-500 mb-2" size={32} />
-            <span className="text-sm font-bold text-red-700 uppercase tracking-wider mb-1">Blood Group</span>
-            <span className="text-4xl font-black text-red-600">{patient.blood_group || 'UNKNOWN'}</span>
-          </div>
-          
-          <div className="bg-amber-50 rounded-2xl p-5 border-2 border-amber-200 shadow-sm flex flex-col items-center justify-center text-center">
-            <Heart className="text-amber-500 mb-2" size={32} />
-            <span className="text-sm font-bold text-amber-700 uppercase tracking-wider mb-1">Organ Donor</span>
-            <span className="text-2xl font-black text-amber-600">{patient.organ_donor ? 'YES' : 'NO / UNKNOWN'}</span>
-          </div>
-        </div>
-
-        {/* Allergies - HIGH PRIORITY WARNING */}
-        <div className="bg-white rounded-2xl shadow-sm border-l-8 border-l-red-500 border-y border-r border-slate-200 overflow-hidden">
-          <div className="bg-red-50 p-4 border-b border-red-100 flex items-center gap-2">
-            <AlertTriangle className="text-red-600" size={24} />
-            <h3 className="font-black text-red-800 uppercase tracking-wide">Known Allergies</h3>
-          </div>
-          <div className="p-5">
-            {patient.allergies && patient.allergies.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {patient.allergies.map((allergy: string, i: number) => (
-                  <span key={i} className="px-4 py-2 bg-red-100 text-red-800 font-bold rounded-lg text-lg border border-red-200 shadow-sm">
-                    {allergy}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="text-slate-500 font-medium text-lg italic">No known allergies on record.</p>
-            )}
-          </div>
-        </div>
-
-        {/* Guest SOS Tools */}
-        <div className="mt-8 mb-12">
-           <PatientSOSPanel patientId={patient.id} />
-           <div className="mt-6">
-             <EmergencyAssistant />
-           </div>
-        </div>
-
-        {/* Chronic Conditions */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-slate-50 p-4 border-b border-slate-100 flex items-center gap-2">
-            <Activity className="text-slate-600" size={20} />
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide">Chronic Conditions</h3>
-          </div>
-          <div className="p-5">
-            {patient.chronic_conditions && patient.chronic_conditions.length > 0 ? (
-              <ul className="list-disc list-inside space-y-1 text-slate-700 font-medium text-lg">
-                {patient.chronic_conditions.map((condition: string, i: number) => (
-                  <li key={i}>{condition}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-slate-500 font-medium">No chronic conditions recorded.</p>
-            )}
-          </div>
-        </div>
-
-        {/* Active Medications */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-slate-50 p-4 border-b border-slate-100 flex items-center gap-2">
-            <Pill className="text-slate-600" size={20} />
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide">Current Medications</h3>
-          </div>
-          <div className="p-5">
-            {patient.current_medications && patient.current_medications.length > 0 ? (
-              <ul className="list-disc list-inside space-y-1 text-slate-700 font-medium text-lg">
-                {patient.current_medications.map((med: string, i: number) => (
-                  <li key={i}>{med}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-slate-500 font-medium">No active medications recorded.</p>
-            )}
-          </div>
-        </div>
-
-        {/* Emergency Contacts */}
-        <div className="bg-indigo-50 rounded-2xl shadow-sm border border-indigo-100 overflow-hidden">
-          <div className="bg-indigo-100/50 p-4 border-b border-indigo-100 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Phone className="text-indigo-600" size={20} />
-              <h3 className="font-bold text-indigo-900 uppercase tracking-wide">Emergency Contact</h3>
+            {/* Chronic Conditions */}
+            <div className="p-6 border-b border-slate-100 relative overflow-hidden">
+               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-orange-500"></div>
+               <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                 <Activity size={14} className="text-orange-500"/> Chronic Conditions
+               </h3>
+               {patient.chronic_conditions && patient.chronic_conditions.length > 0 ? (
+                 <div className="flex flex-wrap gap-2">
+                   {patient.chronic_conditions.map((condition: string, i: number) => (
+                     <span key={i} className="px-3 py-1.5 bg-orange-50 border border-orange-100 text-orange-700 font-bold rounded-xl text-sm">
+                       {condition}
+                     </span>
+                   ))}
+                 </div>
+               ) : (
+                 <p className="text-slate-400 font-medium text-sm">No chronic conditions.</p>
+               )}
             </div>
-          </div>
-          <div className="p-5">
-            {patient.emergency_contact_name ? (
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                  <p className="text-2xl font-black text-indigo-950">{patient.emergency_contact_name}</p>
-                  <p className="text-indigo-700 font-bold uppercase text-sm mt-1">{patient.emergency_contact_relation || 'Relationship Not Specified'}</p>
-                </div>
-                {patient.emergency_contact_phone && (
-                  <a 
-                    href={`tel:${patient.emergency_contact_phone}`}
-                    className="flex-shrink-0 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-xl font-bold transition-colors shadow-md"
-                  >
-                    <Phone size={20} /> Call Now: {patient.emergency_contact_phone}
-                  </a>
-                )}
-              </div>
-            ) : (
-              <p className="text-indigo-500 font-medium">No emergency contact provided.</p>
-            )}
-          </div>
-        </div>
+
+            {/* Current Medications */}
+            <div className="p-6 relative overflow-hidden">
+               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-500"></div>
+               <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                 <Pill size={14} className="text-blue-500"/> Active Medications
+               </h3>
+               {patient.current_medications && patient.current_medications.length > 0 ? (
+                 <div className="flex flex-wrap gap-2">
+                   {patient.current_medications.map((med: string, i: number) => (
+                     <span key={i} className="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-700 font-bold rounded-xl text-sm">
+                       {med}
+                     </span>
+                   ))}
+                 </div>
+               ) : (
+                 <p className="text-slate-400 font-medium text-sm">No active medications.</p>
+               )}
+            </div>
+         </div>
+
+         {/* Emergency Contact */}
+         <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-3xl shadow-lg border border-indigo-400 p-6 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 opacity-10 transform translate-x-4 -translate-y-4"><Phone size={120}/></div>
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-200 mb-4 flex items-center gap-2 relative z-10">
+              <Phone size={12}/> Emergency Contact
+            </h3>
+            
+            <div className="relative z-10">
+               {patient.emergency_contact_name ? (
+                 <div className="flex flex-col gap-4">
+                   <div>
+                     <p className="text-2xl font-black">{patient.emergency_contact_name}</p>
+                     <p className="text-indigo-200 font-medium text-sm mt-0.5">{patient.emergency_contact_relation || 'Relationship Not Specified'}</p>
+                   </div>
+                   {patient.emergency_contact_phone && (
+                     <a 
+                       href={`tel:${patient.emergency_contact_phone}`}
+                       className="w-full flex items-center justify-center gap-2 bg-white text-indigo-700 hover:bg-indigo-50 py-3.5 rounded-xl font-black transition-all shadow-md mt-2"
+                     >
+                       <Phone size={18} className="fill-indigo-700" /> Tap to Call Action
+                     </a>
+                   )}
+                 </div>
+               ) : (
+                 <p className="text-indigo-200 font-medium">No contact provided.</p>
+               )}
+            </div>
+         </div>
 
       </div>
-    </div>
+    </div> 
   );
 };
 

@@ -35,11 +35,13 @@ import PatientFindPharma from "./pages/patient/PatientFindPharma";
 import PatientEmergency from "./pages/patient/PatientEmergency";
 import PatientSettings from "./pages/patient/PatientSettings";
 import PatientFitness from "./pages/patient/PatientFitness";
+import PatientBloodNetwork from "./pages/patient/PatientBloodNetwork";
 import HospitalDashboardLayout from "./pages/hospital/HospitalDashboardLayout";
 import HospitalOverview from "./pages/hospital/HospitalOverview";
 import HospitalPatients from "./pages/hospital/HospitalPatients";
 import HospitalAppointments from "./pages/hospital/HospitalAppointments";
 import HospitalEmergency from "./pages/hospital/HospitalEmergency";
+import HospitalBloodNetwork from "./pages/hospital/HospitalBloodNetwork";
 import HospitalBeds from "./pages/hospital/HospitalBeds";
 import HospitalStaff from "./pages/hospital/HospitalStaff";
 import HospitalInventory from "./pages/hospital/HospitalInventory";
@@ -78,6 +80,7 @@ const App = () => (
             <Route path="find" element={<PatientFindDoctors />} />
             <Route path="pharmacy" element={<PatientFindPharma />} />
             <Route path="emergency" element={<PatientEmergency />} />
+            <Route path="blood-network" element={<PatientBloodNetwork />} />
             <Route path="fitness" element={<PatientFitness />} />
             <Route path="settings" element={<PatientSettings />} />
           </Route>
@@ -92,6 +95,7 @@ const App = () => (
             <Route path="prescriptions" element={<HospitalPrescriptions />} />
             <Route path="prescriptions/analytics" element={<HospitalPrescriptionAnalytics />} />
             <Route path="emergency" element={<HospitalEmergency />} />
+            <Route path="blood-network" element={<HospitalBloodNetwork />} />
             <Route path="beds" element={<HospitalBeds />} />
             <Route path="staff" element={<HospitalStaff />} />
             <Route path="inventory" element={<HospitalInventory />} />

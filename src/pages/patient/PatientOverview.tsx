@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePatientContext } from '@/hooks/usePatientContext';
 import { supabase } from '@/integrations/supabase/client';
 import JharokhaArch from '@/components/admin/JharokhaArch';
-import { Pill, AlertTriangle, Activity, ShieldCheck, Calendar, FileText, TrendingUp, QrCode, Phone, Plus, Loader2, X, Download } from 'lucide-react';
+import { Pill, AlertTriangle, Activity, ShieldCheck, Calendar, FileText, TrendingUp, QrCode, Phone, Plus, Loader2, X, Download, Mic, MicOff } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format, formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
@@ -24,6 +24,8 @@ const PatientOverview = () => {
   const [sugarReadings, setSugarReadings] = useState<any[]>([]);
   const [showLogVitals, setShowLogVitals] = useState(false);
   const [downloadingProfile, setDownloadingProfile] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [recognitionInstance, setRecognitionInstance] = useState<any>(null);
 
   const fetchData = () => {
     const pid = patient.id;
@@ -100,6 +102,56 @@ const PatientOverview = () => {
     } finally {
       setDownloadingProfile(false);
     }
+  };
+
+  const toggleVoiceSOS = () => {
+    if (isListening && recognitionInstance) {
+      recognitionInstance.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+       toast.error("Your browser doesn't support Voice SOS (Try Chrome).");
+       return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    
+    recognition.onstart = () => {
+       setIsListening(true);
+       toast.info("Listening... Say 'Sanjeevani Help' or 'Emergency' to trigger SOS.");
+    };
+    
+    recognition.onresult = (event: any) => {
+       const transcript = Array.from(event.results).map((r: any) => r[0].transcript).join('').toLowerCase();
+       if (transcript.includes('help') || transcript.includes('emergency') || transcript.includes('sanjeevani')) {
+           recognition.stop();
+           setIsListening(false);
+           
+           // Fire the SOS alert
+           toast.error(
+             <div>
+               <p className="font-bold text-lg">VOICE SOS TRIGGERED! 🚨</p>
+               <p className="text-sm">Broadcasting your profile & location to nearby hospitals...</p>
+             </div>, 
+             { duration: 6000, position: 'top-center' }
+           );
+           
+           // Play an alert sound
+           const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+           audio.play().catch(e => console.log(e));
+       }
+    };
+
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+
+    setRecognitionInstance(recognition);
+    recognition.start();
   };
 
   // Profile completeness
@@ -352,6 +404,20 @@ const PatientOverview = () => {
 
       {/* Log Vitals Modal */}
       {showLogVitals && <LogVitalsModal patientId={patient.id} onClose={() => setShowLogVitals(false)} onSaved={() => { setShowLogVitals(false); fetchData(); }} />}
+      
+      {/* Floating Voice SOS Button */}
+      <button 
+        onClick={toggleVoiceSOS}
+        className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center ${isListening ? 'bg-red-600 animate-pulse outline outline-4 outline-red-200' : 'bg-slate-900'}`}
+      >
+         {isListening ? <Mic size={28} className="text-white relative z-10" /> : <MicOff size={28} className="text-white" />}
+         {isListening && (
+           <span className="absolute -top-12 bg-slate-900 text-white text-xs font-bold py-1.5 px-3 rounded-xl whitespace-nowrap animate-in fade-in slide-in-from-bottom-2">
+             Listening...
+           </span>
+         )}
+      </button>
+
     </div>
   );
 };

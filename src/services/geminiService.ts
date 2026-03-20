@@ -55,3 +55,32 @@ export const getMedicalAdviceStream = async (
     onChunk("Connection Error. Please call 108 immediately for physical assistance.");
   }
 };
+
+export const generateAITriageReport = async (
+  patientData: string,
+  emergencyType: string
+): Promise<string> => {
+  try {
+    const key = getApiKey();
+    if (!key) return "AI System Offline (Missing API Key)";
+
+    const genAI = new GoogleGenerativeAI(key);
+    const systemInstruction = `
+      You are the Sanjeevani AI Triage System.
+      You analyze patient records and the current emergency type to output a very brief triage report.
+      Format MUST match exactly:
+      
+      TRIAGE: [RED / YELLOW / GREEN]
+      RISK: [One sentence maximum about fatal drug interactions e.g. Anaphylaxis risk due to Penicillin]
+      ACTION: [One direct command for the ER doctors]
+    `;
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", systemInstruction });
+    const prompt = `Current Emergency: ${emergencyType}\nPatient Medical Profile: ${patientData}`;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
+  } catch (error) {
+    console.error("AI Triage Error:", error);
+    return "TRIAGE: UNKNOWN\nRISK: Unable to fetch AI Triage\nACTION: Standard Operating Procedure";
+  }
+};
