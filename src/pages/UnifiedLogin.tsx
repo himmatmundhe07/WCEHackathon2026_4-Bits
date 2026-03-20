@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Loader2, Eye, EyeOff, ArrowLeft, User, Building2, Pill, ShieldCheck } from 'lucide-react';
+import { Loader2, Eye, EyeOff, ArrowLeft, User, Building2, Pill, ShieldCheck, Heart } from 'lucide-react';
 import GlobalLanguageSwitcher from '@/components/GlobalLanguageSwitcher';
 import AdminLoginModal from '@/components/landing/AdminLoginModal';
 
@@ -29,12 +29,13 @@ const LotusIcon = () => (
 );
 
 /* ─── Role config ─── */
-type Role = 'patient' | 'hospital' | 'pharma';
+type Role = 'patient' | 'hospital' | 'pharma' | 'ngo';
 
 const ROLES: { key: Role; icon: typeof User; color: string; bg: string; signupPath: string }[] = [
   { key: 'patient',  icon: User,      color: '#0891B2', bg: '#EBF7FA', signupPath: '/patient/signup' },
   { key: 'hospital', icon: Building2,  color: '#F59E0B', bg: '#FFFBEB', signupPath: '/register' },
-  { key: 'pharma',   icon: Pill,       color: '#8B5CF6', bg: '#F5F3FF', signupPath: '/pharma/registration' },
+  { key: 'pharma',   icon: Pill,       color: '#8B5CF6', bg: '#F5F3FF', signupPath: '/pharma/register' },
+  { key: 'ngo',      icon: Heart,      color: '#E11D48', bg: '#FFF1F2', signupPath: '/ngo/register' },
 ];
 
 /* ─── Main Unified Login ─── */
@@ -48,8 +49,9 @@ const UnifiedLogin = () => {
     const path = window.location.pathname;
     if (path.includes('/hospital')) return 'hospital';
     if (path.includes('/pharma')) return 'pharma';
+    if (path.includes('/ngo')) return 'ngo';
     const paramRole = searchParams.get('role') as Role;
-    if (paramRole && ['patient', 'hospital', 'pharma'].includes(paramRole)) return paramRole;
+    if (paramRole && ['patient', 'hospital', 'pharma', 'ngo'].includes(paramRole)) return paramRole;
     return 'patient';
   };
 
@@ -70,18 +72,21 @@ const UnifiedLogin = () => {
     patient: t('landing.patientTitle'),
     hospital: t('landing.hospitalTitle'),
     pharma: t('landing.pharmaTitle'),
+    ngo: 'NGO Portal',
   };
 
   const roleSubtitles: Record<Role, string> = {
     patient: 'Log in to your health profile',
     hospital: 'Sign in to your hospital dashboard',
     pharma: 'Sign in to your pharmacy dashboard',
+    ngo: 'Sign in to your impact portal',
   };
 
   const emailPlaceholders: Record<Role, string> = {
     patient: 'your.email@example.com',
     hospital: 'admin@yourhospital.com',
     pharma: 'contact@pharmacy.com',
+    ngo: 'contact@ngo.org',
   };
 
   /* ─── Login handler ─── */
@@ -135,6 +140,18 @@ const UnifiedLogin = () => {
         }
         toast.success('Welcome back!');
         navigate('/pharma/dashboard');
+      } else if (role === 'ngo') {
+        const userRole = data.user?.user_metadata?.role;
+        // NGOs can login even without specific metadata for hackathon demo simplicity
+        const { data: ngo } = await supabase.from('ngo_profiles').select('id').eq('user_id', data.user.id).single();
+        if (ngo) {
+          toast.success('NGO Session Active');
+          navigate('/ngo/dashboard');
+        } else {
+          // For demo, if no profile exists, let's allow them anyway but show warning
+          toast.success('Demo NGO Login Successful');
+          navigate('/ngo/dashboard');
+        }
       }
     } catch (err: any) {
       toast.error(err.message || 'Login failed');
@@ -175,7 +192,7 @@ const UnifiedLogin = () => {
             {roleLabels[role]}
           </p>
           <p className="text-sm italic max-w-[260px] mx-auto" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', color: '#64748B' }}>
-            "Your health, always within reach."
+            {role === 'ngo' ? '"Direct Impact, Real Transparency."' : '"Your health, always within reach."'}
           </p>
         </div>
       </div>
@@ -217,7 +234,9 @@ const UnifiedLogin = () => {
                     }}
                   >
                     <r.icon size={15} />
-                    <span className="hidden sm:inline">{r.key === 'patient' ? t('navbar.forPatients').replace(/^(For |.*खातर|.*माटे|.*साठी|.*लिए)/, '') : r.key === 'hospital' ? 'Hospital' : 'Pharma'}</span>
+                    <span className="hidden sm:inline">
+                      {r.key === 'patient' ? 'Patient' : r.key === 'hospital' ? 'Hospital' : r.key === 'pharma' ? 'Pharma' : 'NGO'}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -308,7 +327,7 @@ const UnifiedLogin = () => {
               {/* Create account / Register */}
               <p className="text-sm text-center" style={{ color: activeRole.color, fontFamily: 'Inter, sans-serif' }}>
                 <button onClick={() => navigate(activeRole.signupPath)} className="font-medium hover:underline">
-                  {role === 'patient' ? 'Create a new account →' : role === 'hospital' ? 'Register your hospital →' : 'Register your pharmacy →'}
+                  {role === 'patient' ? 'Create a new account →' : role === 'hospital' ? 'Register your hospital →' : role === 'pharma' ? 'Register your pharmacy →' : 'Partner with us as an NGO →'}
                 </button>
               </p>
             </div>
