@@ -7,7 +7,7 @@ const LANGUAGES = [
   { code: 'hi',  label: 'Hindi',      nativeLabel: 'हिन्दी' },
   { code: 'gu',  label: 'Gujarati',   nativeLabel: 'ગુજરાતી' },
   { code: 'mr',  label: 'Marathi',    nativeLabel: 'मराठी' },
-  { code: 'raj', label: 'Rajasthani', nativeLabel: 'राजस्थानी' },
+
 ];
 
 const GlobalLanguageSwitcher = () => {
