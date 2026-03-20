@@ -12,7 +12,6 @@ const navItems = [
   { labelKey: '🏃 My Recovery Plan', icon: Activity, path: '/patient/dashboard/fitness' },
   { labelKey: 'sidebar.findDoctors', icon: Search, path: '/patient/dashboard/find' },
   { labelKey: 'sidebar.findPharmacy', icon: Store, path: '/patient/dashboard/pharmacy' },
-  { labelKey: 'Sanjeevani+ Plans', icon: Crown, path: '/pricing' },
   { labelKey: 'sidebar.emergencyProfile', icon: ShieldAlert, path: '/patient/dashboard/emergency' },
   { labelKey: 'sidebar.settings', icon: Settings, path: '/patient/dashboard/settings' },
 ];

@@ -116,13 +116,20 @@ const PatientFindPharma = () => {
                 </div>
 
                 <div className="space-y-1 text-[12px]" style={{ color: '#64748B' }}>
-                  <p className="flex items-center gap-1"><MapPin size={12} /> {p.city}, {p.state}</p>
-                  <p className="flex items-center gap-1 truncate"><MapPin size={12} className="opacity-0" /> {p.address}</p>
+                  <p className="flex items-center gap-1">
+                    <MapPin size={12} /> 
+                    {p.city || p.state ? `${p.city || 'Unknown'}, ${p.state || 'Unknown'}` : 'Location unknown'}
+                  </p>
+                  {p.address && (
+                    <p className="flex items-center gap-1 truncate">
+                      <MapPin size={12} className="opacity-0" /> {p.address}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid #F1F5F9' }}>
                   <span className="flex items-center gap-1 text-[12px] font-bold" style={{ color: '#8B5CF6' }}>
-                    <Phone size={12} /> {p.phone}
+                    <Phone size={12} /> {p.phone || 'N/A'}
                   </span>
                   <span className="flex items-center gap-1 text-[12px] font-medium ml-auto" style={{ color: '#8B5CF6' }}>
                     View & Order <ChevronRight size={14} />
@@ -157,8 +164,12 @@ const PharmaDetailModal = ({ pharma, onClose }: { pharma: any; onClose: () => vo
                 <Pill size={24} style={{ color: '#8B5CF6' }} />
               </div>
               <div>
-                <h3 className="text-xl font-bold" style={{ color: '#1E293B' }}>{pharma.pharmacy_name}</h3>
-                <p className="text-sm" style={{ color: '#64748B' }}>{pharma.city}, {pharma.state}</p>
+                <h3 className="text-xl font-bold" style={{ color: '#1E293B' }}>{pharma.pharmacy_name || 'Partner Pharmacy'}</h3>
+                {pharma.city || pharma.state ? (
+                  <p className="text-sm" style={{ color: '#64748B' }}>{pharma.city || 'Unknown City'}, {pharma.state || 'Unknown State'}</p>
+                ) : (
+                  <p className="text-sm" style={{ color: '#64748B' }}>Location unknown</p>
+                )}
               </div>
             </div>
             <button onClick={onClose} className="p-1.5 rounded-full hover:bg-gray-100">X</button>
@@ -167,12 +178,12 @@ const PharmaDetailModal = ({ pharma, onClose }: { pharma: any; onClose: () => vo
           <div className="space-y-4 mb-6">
             <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2EEF1]">
               <p className="text-xs font-semibold text-[#64748B] mb-1">📍 Address</p>
-              <p className="text-sm text-[#1E293B]">{pharma.address}</p>
+              <p className="text-sm text-[#1E293B]">{pharma.address || 'Address not provided'}</p>
             </div>
             
             <div className="flex gap-2">
-              <a href={`tel:${pharma.phone}`} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[#8B5CF6] text-white text-sm font-semibold">
-                <Phone size={16} /> Call Now
+              <a href={pharma.phone ? `tel:${pharma.phone}` : '#'} onClick={e => !pharma.phone && e.preventDefault()} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg ${pharma.phone ? 'bg-[#8B5CF6] text-white hover:opacity-90' : 'bg-[#E2EEF1] text-[#94A3B8] cursor-not-allowed'} text-sm font-semibold transition-all`}>
+                <Phone size={16} /> {pharma.phone ? 'Call Now' : 'No Phone'}
               </a>
               <button className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-[#8B5CF6] text-[#8B5CF6] text-sm font-semibold">
                 <MessageSquare size={16} /> Message
