@@ -55,6 +55,10 @@ import HospitalPrescriptions from "./pages/hospital/HospitalPrescriptions";
 import HospitalPrescriptionAnalytics from "./pages/hospital/HospitalPrescriptionAnalytics";
 import PublicQRProfile from "./pages/PublicQRProfile";
 
+// NGO Pages
+import NGORegistration from "./pages/ngo/NGORegistration";
+import NGODashboard from "./pages/ngo/NGODashboard";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -71,6 +75,12 @@ const App = () => (
           <Route path="/patient/login" element={<UnifiedLogin />} />
           <Route path="/hospital/login" element={<UnifiedLogin />} />
           <Route path="/pharma/login" element={<UnifiedLogin />} />
+          <Route path="/ngo/login" element={<UnifiedLogin />} />
+          
+          {/* NGO routes */}
+          <Route path="/ngo/register" element={<NGORegistration />} />
+          <Route path="/ngo/dashboard" element={<NGODashboard />} />
+
           {/* Patient dashboard routes */}
           <Route path="/patient/dashboard" element={<PatientDashboardLayout />}>
             <Route index element={<PatientOverview />} />
@@ -104,6 +114,8 @@ const App = () => (
             <Route path="documents" element={<HospitalDocuments />} />
             <Route path="settings" element={<HospitalSettings />} />
           </Route>
+          
+          {/* Fixed Pharma routes */}
           <Route path="/pharma/register" element={<PharmaRegistration />} />
 
           {/* Pharma dashboard routes */}
