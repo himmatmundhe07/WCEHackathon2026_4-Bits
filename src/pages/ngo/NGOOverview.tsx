@@ -4,7 +4,7 @@ import JharokhaArch from '@/components/admin/JharokhaArch';
 import { Heart, Users, CheckCircle2, AlertCircle, IndianRupee, ExternalLink, Filter, Search, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-const NGODashboard = () => {
+const NGOOverview = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ totalRequests: 0, totalFunded: 0, pendingAmount: 0 });
@@ -189,4 +189,4 @@ const StatCard = ({ icon, label, value, color }: { icon: any, label: string, val
   </div>
 );
 
-export default NGODashboard;
+export default NGOOverview;

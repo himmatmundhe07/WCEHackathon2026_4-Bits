@@ -57,7 +57,9 @@ import PublicQRProfile from "./pages/PublicQRProfile";
 
 // NGO Pages
 import NGORegistration from "./pages/ngo/NGORegistration";
-import NGODashboard from "./pages/ngo/NGODashboard";
+import NGOOverview from "./pages/ngo/NGOOverview";
+import NGODashboardLayout from "./pages/ngo/NGODashboardLayout";
+import NGOPatients from "./pages/ngo/NGOPatients";
 
 const queryClient = new QueryClient();
 
@@ -79,7 +81,10 @@ const App = () => (
           
           {/* NGO routes */}
           <Route path="/ngo/register" element={<NGORegistration />} />
-          <Route path="/ngo/dashboard" element={<NGODashboard />} />
+          <Route path="/ngo/dashboard" element={<NGODashboardLayout />}>
+            <Route index element={<NGOOverview />} />
+            <Route path="patients" element={<NGOPatients />} />
+          </Route>
 
           {/* Patient dashboard routes */}
           <Route path="/patient/dashboard" element={<PatientDashboardLayout />}>
