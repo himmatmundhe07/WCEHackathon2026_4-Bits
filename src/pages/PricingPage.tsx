@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Crown, Users, Zap, Star, ArrowLeft, Ticket } from 'lucide-react';
 import JharokhaArch from '@/components/admin/JharokhaArch';
-import CheckoutModal from '@/components/subscription/CheckoutModal';
 
 /* ─── SVG Helpers ─── */
 const LotusIcon = () => (
@@ -277,13 +276,6 @@ const PricingPage = () => {
         </div>
       </section>
 
-      {/* Checkout Modal */}
-      {checkoutPlan && (
-        <CheckoutModal
-          planType={checkoutPlan}
-          onClose={() => setCheckoutPlan(null)}
-        />
-      )}
     </div>
   );
 };
