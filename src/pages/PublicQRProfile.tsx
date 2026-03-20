@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Shield, AlertTriangle, Droplet, Pill, Phone, User, Heart, Activity } from 'lucide-react';
 import { toast } from 'sonner';
+import PatientSOSPanel from '@/components/patient/dashboard/PatientSOSPanel';
+import EmergencyAssistant from '@/components/patient/dashboard/EmergencyAssistant';
 
 /**
  * Helper to calculate distance between two coordinates in km using Haversine formula
@@ -191,9 +193,11 @@ const PublicQRProfile = () => {
                </p>
              </div>
            </div>
-        )}
+         )}
 
-        {/* Patient Identity Header */}
+         {/* Removed from top for better flow */}
+
+         {/* Patient Identity Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row items-center gap-6">
           <div className="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center border-4 border-red-50">
             {patient.profile_photo_url ? (
@@ -252,6 +256,14 @@ const PublicQRProfile = () => {
               <p className="text-slate-500 font-medium text-lg italic">No known allergies on record.</p>
             )}
           </div>
+        </div>
+
+        {/* Guest SOS Tools */}
+        <div className="mt-8 mb-12">
+           <PatientSOSPanel patientId={patient.id} />
+           <div className="mt-6">
+             <EmergencyAssistant />
+           </div>
         </div>
 
         {/* Chronic Conditions */}

@@ -2,6 +2,8 @@ import { usePatientContext } from '@/hooks/usePatientContext';
 import { QRCodeSVG } from 'qrcode.react';
 import JharokhaArch from '@/components/admin/JharokhaArch';
 import { Download, Share2, Printer, Phone, AlertTriangle, Heart } from 'lucide-react';
+import PatientSOSPanel from '@/components/patient/dashboard/PatientSOSPanel';
+import EmergencyAssistant from '@/components/patient/dashboard/EmergencyAssistant';
 
 const PatientEmergency = () => {
   const { patient } = usePatientContext();
@@ -24,25 +26,55 @@ const PatientEmergency = () => {
 
   return (
     <div className="space-y-6">
-      {/* QR Card */}
-      <div className="bg-white rounded-xl overflow-hidden" style={{ border: '1px solid #EF4444', boxShadow: '0 2px 12px rgba(239,68,68,0.1)' }}>
-        <JharokhaArch color="#EF4444" opacity={0.2} />
-        <div className="p-6 flex flex-col md:flex-row gap-6">
-          <div id="emergency-qr" className="shrink-0 text-center">
-            <QRCodeSVG value={qrUrl} size={200} bgColor="#FFFFFF" fgColor="#0891B2" level="H" />
-            <p className="text-[12px] mt-2 italic" style={{ color: '#64748B' }}>Scan to view emergency profile</p>
-            <p className="text-[11px] font-medium" style={{ color: '#1E293B' }}>{patient.full_name}</p>
+      {/* Dynamic SOS System */}
+      <PatientSOSPanel patientId={patient.id} />
+
+      {/* Medical AI Triage Assistant */}
+      <EmergencyAssistant />
+
+      {/* Premium Digital Medical ID Card */}
+      <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl overflow-hidden relative shadow-md border border-[#E2EEF1]">
+        <JharokhaArch color="#0891B2" opacity={0.15} />
+        
+        {/* Card Header Strip */}
+        <div className="bg-[#0891B2] text-white px-6 py-3 flex justify-between items-center relative z-10 shadow border-b border-[#0369A1]">
+          <div className="flex items-center gap-2">
+             <Heart size={18} fill="currentColor" className="text-white" />
+             <span className="font-black tracking-widest uppercase text-sm">Sanjeevani Medical Pass</span>
           </div>
-          <div className="flex-1">
-            <h2 className="text-lg font-bold mb-1" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', color: '#1E293B' }}>Your Emergency QR</h2>
-            <p className="text-[13px] mb-4" style={{ color: '#64748B' }}>
-              Emergency responders scan this to access your critical health information instantly — no login required.
-            </p>
-            <div className="space-y-2 text-[13px] mb-4">
-              {patient.blood_group && <p>🩸 <span className="font-medium" style={{ color: '#EF4444' }}>Blood Group:</span> {patient.blood_group}</p>}
-              {(patient.allergies || []).length > 0 && <p>⚠️ <span className="font-medium" style={{ color: '#EF4444' }}>Allergic to:</span> {patient.allergies!.join(', ')}</p>}
-              {(patient.current_medications || []).length > 0 && <p>💊 {patient.current_medications!.length} active medications</p>}
-              {patient.emergency_contact_name && <p>📞 {patient.emergency_contact_name} ({patient.emergency_contact_relation})</p>}
+          <span className="text-[10px] font-bold bg-white text-[#0891B2] px-2.5 py-1 rounded-full shadow-inner tracking-wider">SCAN FOR VITALS</span>
+        </div>
+
+        <div className="p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')]">
+          <div id="emergency-qr" className="shrink-0 bg-white p-4 rounded-2xl shadow-xl border border-[#E2EEF1] relative transition-transform hover:scale-105 group">
+            <QRCodeSVG value={qrUrl} size={180} bgColor="#FFFFFF" fgColor="#000000" level="H" />
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#1E293B] text-white text-[11px] font-black uppercase px-4 py-1.5 rounded-full shadow-md whitespace-nowrap opacity-100 transition-opacity">
+              {patient.full_name}
+            </div>
+            <p className="text-[10px] mt-4 text-center font-bold text-slate-400 uppercase tracking-widest">Public Profile Link</p>
+          </div>
+          
+          <div className="flex-1 space-y-4">
+            <div>
+              <h2 className="text-xl font-bold mb-1" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', color: '#1E293B' }}>Your Emergency QR</h2>
+              <p className="text-[13px] leading-relaxed" style={{ color: '#64748B' }}>
+                Emergency responders scan this to access your critical health information instantly — no password required. <strong>Set this as your lock screen wallpaper to stay safe.</strong>
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 text-[13px] mb-4">
+              {patient.blood_group && (
+                <div className="bg-red-50 p-3 rounded-xl border border-red-100 flex flex-col justify-center">
+                  <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Blood Group</span>
+                  <span className="font-black text-lg text-red-700">{patient.blood_group}</span>
+                </div>
+              )}
+              {(patient.allergies || []).length > 0 && (
+                <div className="bg-orange-50 p-3 rounded-xl border border-orange-100 flex flex-col justify-center">
+                  <span className="text-[10px] font-bold text-orange-500 uppercase tracking-wider mb-1">Allergies</span>
+                  <span className="font-black text-xs text-orange-700">{patient.allergies!.join(', ')}</span>
+                </div>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               <button onClick={handleDownload} className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-semibold text-white" style={{ background: '#0891B2' }}>

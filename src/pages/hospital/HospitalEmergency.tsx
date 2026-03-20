@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import type { HospitalProfile } from '@/hooks/useHospitalContext';
 import ScannerModal from '@/components/hospital/ScannerModal';
 import AdmitPatientModal from '@/components/hospital/AdmitPatientModal';
+import HospitalSOSQueue from '@/components/hospital/dashboard/HospitalSOSQueue';
 
 const HospitalEmergency = () => {
   const { hospital } = useOutletContext<{ hospital: HospitalProfile | null }>();
@@ -143,6 +144,9 @@ const HospitalEmergency = () => {
           </button>
         </div>
       )}
+
+      {/* Live SOS Queue */}
+      {hospital && <HospitalSOSQueue hospitalId={hospital.id} />}
 
       {/* Active Alerts */}
       <div className="rounded-xl p-5" style={{ background: alerts.length > 0 ? '#FEF2F2' : '#F0FDF4' }}>
