@@ -31,12 +31,13 @@ const NGOPatients = () => {
       // We'll simulate fetching patients by looking for patients where the NGO helped them
       // In a real app, you'd add an NGO_ID to the `patients` table or an `ngo_patients` relation.
       
-      // Let's fetch all patients for now but in a real-world scenario we'd filter by `ngo_id`
-      const { data, error } = await supabase
+      // Fetch patients added by this specific NGO
+      const { data, error } = await (supabase as any)
         .from('patients')
         .select('*')
+        .eq('ngo_id', userData.user.id)
         .order('created_at', { ascending: false })
-        .limit(10); // limited for demo purposes of the EHR system
+        .limit(50);
 
       if (error) throw error;
       setPatients(data || []);
@@ -67,13 +68,17 @@ const NGOPatients = () => {
         return;
       }
 
-      // Step 2: Insert patient
-      const { error: patErr } = await supabase.from('patients').insert({
+      // Get current NGO user ID
+      const { data: userData } = await supabase.auth.getUser();
+
+      // Step 2: Insert patient with NGO ID
+      const { error: patErr } = await (supabase as any).from('patients').insert({
         full_name: newPatient.fullName,
         email: newPatient.email,
         phone: newPatient.phone,
         blood_group: newPatient.bloodGroup || null,
         supabase_user_id: fnData.userId,
+        ngo_id: userData.user?.id,
       });
 
       if (patErr) throw patErr;
