@@ -36,6 +36,7 @@ import PatientEmergency from "./pages/patient/PatientEmergency";
 import PatientSettings from "./pages/patient/PatientSettings";
 import PatientFitness from "./pages/patient/PatientFitness";
 import PatientBloodNetwork from "./pages/patient/PatientBloodNetwork";
+import PatientPregnancy from "./pages/patient/PatientPregnancy";
 import HospitalDashboardLayout from "./pages/hospital/HospitalDashboardLayout";
 import HospitalOverview from "./pages/hospital/HospitalOverview";
 import HospitalPatients from "./pages/hospital/HospitalPatients";
@@ -97,6 +98,7 @@ const App = () => (
             <Route path="emergency" element={<PatientEmergency />} />
             <Route path="blood-network" element={<PatientBloodNetwork />} />
             <Route path="fitness" element={<PatientFitness />} />
+            <Route path="pregnancy" element={<PatientPregnancy />} />
             <Route path="settings" element={<PatientSettings />} />
           </Route>
           <Route path="/patient/reset-password" element={<PatientResetPassword />} />

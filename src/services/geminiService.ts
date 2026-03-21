@@ -84,3 +84,33 @@ export const generateAITriageReport = async (
     return "TRIAGE: UNKNOWN\nRISK: Unable to fetch AI Triage\nACTION: Standard Operating Procedure";
   }
 };
+
+export const generatePrenatalPlan = async (
+  trimester: string,
+  conditions: string
+): Promise<string> => {
+  try {
+    const key = getApiKey();
+    if (!key) return "API Key missing. Cannot generate plan.";
+
+    const genAI = new GoogleGenerativeAI(key);
+    const systemInstruction = `
+      You are the Sanjeevani Prenatal AI Expert.
+      You generate a safe, highly-personalized weekly meal plan and safe prenatal yoga/exercise routine.
+      Format the output in clean, readable markdown format.
+      Always include exactly these 3 sections with emojis:
+      ### 🥗 Nutritional Focus (Meals & Supplements)
+      ### 🧘 Safe Prenatal Yoga & Exercises
+      ### 🚫 Strict Medical "What to Avoid"
+    `;
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", systemInstruction });
+    const prompt = `I am in my ${trimester}. I have these medical conditions / symptoms: ${conditions || 'None'}. Please generate my personalized prenatal guide.`;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
+  } catch (error) {
+    console.error("Prenatal Plan Error:", error);
+    return "Failed to generate prenatal plan. Please try again later.";
+  }
+};
+
