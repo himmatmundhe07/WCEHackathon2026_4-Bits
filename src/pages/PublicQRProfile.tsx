@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Shield, AlertTriangle, Droplet, Pill, Phone, User, Heart, Activity } from 'lucide-react';
 import { toast } from 'sonner';
+import PatientSOSPanel from '@/components/patient/dashboard/PatientSOSPanel';
 
 /**
  * Helper to calculate distance between two coordinates in km using Haversine formula
@@ -220,21 +221,22 @@ const PublicQRProfile = () => {
          </div>
 
          {/* Action Log Result */}
-         {scanLogged && (
+         {scanLogged && !nearestHospital && (
            <div className="bg-slate-900 border border-slate-700 text-slate-300 p-4 rounded-2xl flex items-start gap-3 shadow-lg">
              <div className="bg-green-500/20 p-2 rounded-xl border border-green-500/30">
                <Activity size={18} className="text-green-400" />
              </div>
              <div>
                <h3 className="font-bold text-sm text-white">Emergency Ping Sent</h3>
-               <p className="text-[11px] mt-1 text-slate-400">
-                 {nearestHospital 
-                    ? `Hospital Alerted: ${nearestHospital.hospital_name}`
-                    : 'System Alert Dispatched'}
-               </p>
+               <p className="text-[11px] mt-1 text-slate-400">System Alert Dispatched</p>
              </div>
            </div>
          )}
+
+         {/* Full Interactive SOS Panel (Location, Map, Video) */}
+         <div className="my-6">
+           <PatientSOSPanel patientId={patient.id} />
+         </div>
 
          {/* Medical Data Cards */}
          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
