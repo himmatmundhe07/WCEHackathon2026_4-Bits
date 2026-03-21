@@ -139,6 +139,17 @@ export default function PatientSOSPanel({ patientId }: { patientId: string }) {
                </div>
              )}
            </div>
+
+           {activeEm.doctor_instructions && (
+             <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-xl mb-4 animate-in fade-in slide-in-from-top-4">
+               <h4 className="text-[12px] font-black uppercase tracking-widest text-orange-600 flex items-center gap-2 mb-1">
+                 <AlertCircle size={14} /> Doctor's First-Aid Instructions
+               </h4>
+               <p className="text-orange-900 font-bold text-sm">
+                 {activeEm.doctor_instructions}
+               </p>
+             </div>
+           )}
            
            <div className="flex flex-col sm:flex-row gap-3">
              <div className="flex-1 bg-[#FEF2F2] p-4 rounded-xl border border-[#FCA5A5]">

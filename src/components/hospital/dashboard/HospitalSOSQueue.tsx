@@ -35,6 +35,8 @@ export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string })
   const [hospitalCoords, setHospitalCoords] = useState<{lat: number, lng: number} | null>(null);
   const [aiTriageResults, setAiTriageResults] = useState<Record<string, string>>({});
   const [generatingTriage, setGeneratingTriage] = useState<Record<string, boolean>>({});
+  const [instructionText, setInstructionText] = useState<Record<string, string>>({});
+  const [sendingInstruction, setSendingInstruction] = useState<Record<string, boolean>>({});
 
   // Fetch Hospital's own coordinates first
   useEffect(() => {
@@ -104,6 +106,21 @@ export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string })
     await (supabase as any).from('emergencies').update(payload).eq('id', id);
     toast.success(`SOS marked as ${newStatus.toUpperCase()}`);
     fetchActive();
+  };
+
+  const sendInstructions = async (id: string) => {
+    const text = instructionText[id];
+    if (!text?.trim()) return;
+    setSendingInstruction(p => ({...p, [id]: true}));
+    try {
+      await (supabase as any).from('emergencies').update({ doctor_instructions: text }).eq('id', id);
+      toast.success('Instructions sent to bystander!');
+      fetchActive();
+    } catch (e) {
+      toast.error('Failed to send instructions');
+    } finally {
+      setSendingInstruction(p => ({...p, [id]: false}));
+    }
   };
 
   const handleAITriage = async (sos: any) => {
@@ -200,6 +217,33 @@ export default function HospitalSOSQueue({ hospitalId }: { hospitalId: string })
                    >
                      {generatingTriage[sos.id] ? <span className="animate-pulse flex items-center gap-2"><BrainCircuit size={16} className="animate-spin"/> Analyzing Profile...</span> : <><BrainCircuit size={16}/> Generate AI Predictive Triage</>}
                    </button>
+                 )}
+               </div>
+
+               {/* Doctor Instructions Section */}
+               <div className="bg-orange-50 p-4 border border-orange-100 rounded-xl mb-4">
+                 <h4 className="text-[11px] font-black uppercase text-orange-600 tracking-widest mb-2">First-Aid Instructions to Bystander</h4>
+                 {sos.doctor_instructions ? (
+                   <div className="bg-white p-3 rounded-lg border border-orange-200 text-sm text-slate-700 font-medium">
+                     {sos.doctor_instructions}
+                   </div>
+                 ) : (
+                   <div className="flex gap-2">
+                     <input 
+                       type="text" 
+                       placeholder="E.g., Start CPR immediately, elevate legs..." 
+                       value={instructionText[sos.id] || ''}
+                       onChange={e => setInstructionText(p => ({...p, [sos.id]: e.target.value}))}
+                       className="flex-1 text-sm border border-orange-200 rounded-lg px-3 py-2 outline-none focus:border-orange-400"
+                     />
+                     <button 
+                       onClick={() => sendInstructions(sos.id)}
+                       disabled={sendingInstruction[sos.id] || !instructionText[sos.id]?.trim()}
+                       className="px-4 bg-orange-500 text-white font-bold text-[11px] uppercase rounded-lg hover:bg-orange-600 disabled:opacity-50 transition-colors"
+                     >
+                       {sendingInstruction[sos.id] ? 'Sending...' : 'Send'}
+                     </button>
+                   </div>
                  )}
                </div>
 
