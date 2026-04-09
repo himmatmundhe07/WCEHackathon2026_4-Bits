@@ -88,4 +88,4 @@ npm run dev
 ```
 
 ---
-<p align="center"><i>Proudly built for WCE Hackathon 2026</i></p>
+<p align="center"><i>Proudly built for Healthcare </i></p>
